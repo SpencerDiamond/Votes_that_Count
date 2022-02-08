@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Voter extends Citizen{
 	//instance variables
@@ -17,7 +18,7 @@ public class Voter extends Citizen{
 	}	
 	public Voter(float pCiv, float pEcon, float pSoc) {
 		super(pCiv, pEcon, pSoc);
-		setAppRad((r.nextInt() * 200) - 100); //generates a random number in [-100, 100]
+		setAppRad((r.nextFloat() * 200) - 100); //generates a random number in [-100, 100]
 	}	
 	public Voter(float pCiv, float pEcon, float pSoc, float pAppRad) {
 		super(pCiv, pEcon, pSoc);
@@ -33,7 +34,7 @@ public class Voter extends Citizen{
 	}	
 	public Voter(float pCiv, float pEcon, float pSoc, Party pParty) {
 		super(pCiv, pEcon, pSoc, pParty);
-		setAppRad((r.nextInt() * 200) - 100); //generates a random number in [-100, 100]
+		setAppRad((r.nextFloat() * 200) - 100); //generates a random number in [-100, 100]
 	}	
 	public Voter(float pCiv, float pEcon, float pSoc, float pAppRad, Party pParty) {
 		super(pCiv, pEcon, pSoc, pParty);
@@ -57,25 +58,42 @@ public class Voter extends Citizen{
 	}
 	
 	public Candidate[] findPrefList(Candidate[] candList) {
-		ArrayList<Candidate> cList = new ArrayList<Candidate>();
-		Candidate cand;
+		ArrayList<Candidate[]> cList = new ArrayList<>();
 		float x,y,z;
 		for (Candidate c: candList) {
 			x = c.getCiv() - this.getCiv();
 			y = c.getEcon() - this.getEcon();
 			z = c.getSoc() - this.getSoc();
-			cand = new Candidate(x,y,z);
+			Candidate[] cand = new Candidate[2];
+			cand[0] = c;
+			cand[1] = new Candidate(x,y,z);
 			cList.add(cand);
 		}
+		for (Candidate[] l: cList) {
+			System.out.println(l[0] + "  " + l[1]);
+		}
+		cList.sort(new Comparator<Candidate[]>() {
+	        @Override
+	        public int compare(Candidate[] o1, Candidate[] o2) {
+	            return o1[1].compareTo(o2[1]);
+	        }
+	    });
+		System.out.println("Sorted");
+		for (Candidate[] l: cList) {
+			System.out.println(l[0] + "  " + l[1]);
+		}
 		
-		cList.sort(null);
-		Candidate[] pList = cList.toArray(new Candidate[cList.size()]);
+		Candidate[] pList = new Candidate[candList.length];
+		for (int n=0; n < pList.length; n++) {
+			pList[n] = cList.get(n)[0];
+		}
 		
 		this.setPrefList(pList);
 		return pList;
 	}
 	
 	//print method
+	@Override
 	public String toString() {
 		return "Voter: " + super.toString() +","+ getAppRad();
 	}
