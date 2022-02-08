@@ -69,19 +69,13 @@ public class Voter extends Citizen{
 			cand[1] = new Candidate(x,y,z);
 			cList.add(cand);
 		}
-		for (Candidate[] l: cList) {
-			System.out.println(l[0] + "  " + l[1]);
-		}
+
 		cList.sort(new Comparator<Candidate[]>() {
 	        @Override
 	        public int compare(Candidate[] o1, Candidate[] o2) {
 	            return o1[1].compareTo(o2[1]);
 	        }
 	    });
-		System.out.println("Sorted");
-		for (Candidate[] l: cList) {
-			System.out.println(l[0] + "  " + l[1]);
-		}
 		
 		Candidate[] pList = new Candidate[candList.length];
 		for (int n=0; n < pList.length; n++) {
