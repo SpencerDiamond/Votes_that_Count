@@ -27,6 +27,7 @@ public class Party extends PolEntity{
 	}
 	
 	//print method
+	@Override
 	public String toString() {
 		return "Party: " + super.toString() +","+ getFunding();
 	}

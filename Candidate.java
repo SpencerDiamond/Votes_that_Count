@@ -51,6 +51,7 @@ public class Candidate extends Citizen{
 	}
 	
 	//print method
+	@Override
 	public String toString() {
 		return "Candidate: " + super.toString() +","+ getVotes();
 	}

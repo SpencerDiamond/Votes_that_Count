@@ -2,7 +2,15 @@
 public class Main {
 
 	public static void main(String[] args) {
-
+		
+		Voter[] vList = {new Voter(0,2,0), new Voter(9,1,0), new Voter(3,5,0)};
+		Candidate[] cList = {new Candidate(3,-6,0), new Candidate(-2,-1,0),  new Candidate(-9,1,0)};
+		
+		for (Voter v: vList) {
+			System.out.println(v);
+			v.findPrefList(cList);
+		}
+		
 	}
 
 	//list methods

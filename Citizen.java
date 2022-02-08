@@ -29,6 +29,7 @@ public abstract class Citizen extends PolEntity {
 	}
 	
 	//print method
+	@Override
 	public String toString() {
 		return super.toString();
 	}
