@@ -1,12 +1,15 @@
+package thesis.model;
 
-public class SpoilerEff extends FairnessMeasure {
+import java.util.ArrayList;
+
+public class IndepofAlt extends FairnessMeasure {
 
 	//constructors
-	public SpoilerEff(VotingSystem pElection) {
-		super(pElection);
+	public IndepofAlt(VotingSystem pVotingSystem) {
+		super(pVotingSystem);
 	}
-	public SpoilerEff(Voter[] vList, Candidate[] cList, Party[] pList, VotingSystem pElection) {
-		super(vList, cList, pList, pElection);
+	public IndepofAlt(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, ArrayList<Candidate> wList, VotingSystem pVotingSystem) {
+		super(vList, cList, pList, wList, pVotingSystem);
 	}
 
 }

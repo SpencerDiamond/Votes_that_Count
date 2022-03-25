@@ -1,50 +1,62 @@
+package thesis.model;
+
+import java.util.ArrayList;
 
 public abstract class FairnessMeasure {
 	//instance variables
-	private Voter[] voterList;
-	private Candidate[] candList;
-	private Party[] partyList;
-	private VotingSystem mElection;
+	private ArrayList<Voter> voterList;
+	private ArrayList<Candidate> candList;
+	private ArrayList<Party> partyList;
+	private ArrayList<Candidate> winnerList;
+	private VotingSystem mVotingSystem;
 	
 	//constructors
-	public FairnessMeasure(VotingSystem pElection) {
-		setVoterList(pElection.getVoterList());
-		setCandList(pElection.getCandList());
-		setPartyList(pElection.getPartyList());
-		setElection(pElection);
+	public FairnessMeasure(VotingSystem pVotingSystem) {
+		setVoterList(pVotingSystem.getVoterList());
+		setCandList(pVotingSystem.getCandList());
+		setPartyList(pVotingSystem.getPartyList());
+		setWinList(pVotingSystem.getWinList());
+		setVotingSystem(pVotingSystem);
 	}
-	public FairnessMeasure(Voter[] vList, Candidate[] cList, Party[] pList, VotingSystem pElection) {
+	public FairnessMeasure(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, ArrayList<Candidate> wList, VotingSystem pVotingSystem) {
 		setVoterList(vList);
 		setCandList(cList);
 		setPartyList(pList);
-		setElection(pElection);
+		setWinList(wList);
+		setVotingSystem(pVotingSystem);
 	}
 	
 	//mutator methods
-	public void setVoterList(Voter[] vList) {
+	public void setVoterList(ArrayList<Voter> vList) {
 		voterList = vList;
 	}
-	public void setCandList(Candidate[] cList) {
+	public void setCandList(ArrayList<Candidate> cList) {
 		candList = cList;
 	}
-	public void setPartyList(Party[] pList) {
+	public void setPartyList(ArrayList<Party> pList) {
 		partyList = pList;
 	}
-	public void setElection(VotingSystem pElection) {
-		mElection = pElection;
+	public void setWinList(ArrayList<Candidate> wList) {
+		winnerList = wList;
+	}
+	public void setVotingSystem(VotingSystem pVotingSystem) {
+		mVotingSystem = pVotingSystem;
 	}
 		
 	//accessor methods
-	public Voter[] getVoterList() {
+	public ArrayList<Voter> getVoterList() {
 		return voterList;
 	}
-	public Candidate[] getCandList() {
+	public ArrayList<Candidate> getCandList() {
 		return candList;
 	}
-	public Party[] getPartyList() {
+	public ArrayList<Party> getPartyList() {
 		return partyList;
 	}
-	public VotingSystem getElection() {
-		return mElection;
+	public ArrayList<Candidate> getWinList() {
+		return winnerList;
+	}
+	public VotingSystem getVotingSystem() {
+		return mVotingSystem;
 	}
 }

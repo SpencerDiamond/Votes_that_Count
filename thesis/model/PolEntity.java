@@ -1,14 +1,14 @@
+package thesis.model;
+
 import java.util.Random;
 
-public abstract class PolEntity implements Comparable<PolEntity> { //political entity
+public abstract class PolEntity {//implements Comparable<PolEntity> { //political entity
 	//instance variables
-	private float mCiv; //coordinate on Authoritarian/Libertarian (civil) axis
-	private float mEcon; //coordinate on Collectivist/Capitalist (economic) axis
-	private float mSoc; //coordinate on the Right/Left (social) axis	
-	
-	private static PolEntity origin = new Candidate(0,0,0,"s");
-	
-	Random r = new Random();
+	private float mCiv; //coordinate on Hierarchical/Individualistic (civil) axis
+	private float mEcon; //coordinate on Socialist/Capitalist (economic) axis
+	private float mSoc; //coordinate on the Right/Left (social) axis
+	protected Random r = new Random();
+	protected static final PolEntity origin = new Candidate(0,0,0,"s");
 	
 	//constructors
 	public PolEntity() { //creates a PolEntity at a random point
@@ -20,6 +20,11 @@ public abstract class PolEntity implements Comparable<PolEntity> { //political e
 		setCiv(pCiv);
 		setEcon(pEcon);
 		setSoc(pSoc);
+	}
+	public PolEntity(PolEntity pe) {
+		setCiv(pe.getCiv());
+		setEcon(pe.getEcon());
+		setSoc(pe.getSoc());
 	}
 	
 	//mutator methods
@@ -44,22 +49,20 @@ public abstract class PolEntity implements Comparable<PolEntity> { //political e
 		return mSoc;
 	}
 	
-	@Override
-	public int compareTo(PolEntity pe) {
-		float thisNorm = VotingSystem.dNorm(this, origin);
-		float thatNorm = VotingSystem.dNorm(pe, origin);
-		
-		if (thisNorm > thatNorm) {
-			return 1;
-		} else if (thisNorm == thatNorm) {
-			return 0;
-		} else {
-			return -1;
-		}
-	}
-	
 	//print method
 	public String toString() {
 		return getCiv() +","+ getEcon() +","+ getSoc();
 	}
+	
+	//Finds the magnitude of the separation between two PolEntities
+	public float dNorm(PolEntity pe) { 
+		float civ = pe.getCiv() - getCiv(); //
+		float econ = pe.getEcon() - getEcon(); //These three lines find the difference vector between the two points
+		float soc = pe.getSoc() - getSoc(); //
+		
+		float dot = civ*civ + econ*econ + soc*soc; //These two lines find the dot product of the difference vector
+		float norm = (float) Math.sqrt(dot); //then find the root of the dot product to get the norm of the vector
+		return norm;
+	}
+
 }

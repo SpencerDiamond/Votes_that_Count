@@ -1,17 +1,26 @@
+package thesis.model;
+
+import java.util.ArrayList;
 
 public class FirstPastThePost extends VotingSystem {
 
-	public FirstPastThePost(Voter[] vList, Candidate[] cList, Party[] pList) {
+	public FirstPastThePost(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		super(vList, cList, pList);
 	}
 
-	@Override
-	public void giveVotes(Voter[] vList) {
-		float norm1=0;
-		Candidate cand=null;
-		for (Voter v : vList) {
-			if ((norm1 <= v.getAppRad()) && (cand != null)) {
-				cand.setVotes(cand.getVotes() + 1);
+	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList) {
+		ArrayList<Voter> nvList = new ArrayList<>(vList);
+		ArrayList<Candidate> ncList = new ArrayList<>(cList);
+		Candidate c = null;
+		
+		int m=0;//ddddddddddddddddddddddddddddddd
+		
+		for (Voter v: nvList) {
+			v.setPrefList(v.findPrefList(ncList));
+			if (!v.getPrefList().isEmpty()) {
+				c = v.getPrefList().get(0);
+				c.addVote();
+				System.out.println(++m +" "+ c);
 			}
 		}
 	}
