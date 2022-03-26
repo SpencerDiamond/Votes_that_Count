@@ -10,7 +10,7 @@ public class InstantRunoff extends VotingSystem {
 	
 	public InstantRunoff(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		super(vList, cList, pList);
-		setNumToBeat(vList.size()/2 + 1); //50% plus 1
+		setNumToBeat((vList.size()/2) + 1); //50% plus 1
 	}
 	public InstantRunoff(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, int pNumToBeat) {
 		super(vList, cList, pList);
@@ -25,6 +25,15 @@ public class InstantRunoff extends VotingSystem {
 	//accessor method
 	public int getNumToBeat() {
 		return mNumToBeat;
+	}
+	
+	public void lowerNumToBeat() {
+		mNumToBeat--;
+	}
+	
+	public void reset() {
+		super.reset();
+		setNumToBeat((getVoterList().size()/2) + 1);
 	}
 	
 	public Candidate findLoser(ArrayList<Candidate> cList) {
@@ -52,8 +61,10 @@ public class InstantRunoff extends VotingSystem {
 	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
+		ArrayList<Party> npList = new ArrayList<>(getPartyList());
 		Candidate r = null;
 		Candidate c = null;
+		boolean e=false;
 		
 		int m=0;//ddddddddddddddddddddddd
 		
@@ -63,10 +74,17 @@ public class InstantRunoff extends VotingSystem {
 				c = v.getPrefList().get(0);
 				c.addVote();
 				System.out.println(++m +" "+ c);
+			} else if (e) {
+				lowerNumToBeat();
+				e = false;
+			} else {
+				e = true;
 			}
 		}
 		
-		while (findWin(nvList, ncList, true).getVotes() < getNumToBeat()) {
+		giveFunding(nvList, npList);
+		
+		while ((findWin(nvList, ncList, true).getVotes() < getNumToBeat()) && (ncList.size() > 1)) {
 			m=0;//ddddddddddddddddddd
 			r = findLoser(ncList);
 			System.out.println("Removing "+ r);

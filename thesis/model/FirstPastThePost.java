@@ -11,6 +11,7 @@ public class FirstPastThePost extends VotingSystem {
 	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
+		ArrayList<Party> npList = new ArrayList<>(getPartyList());
 		Candidate c = null;
 		
 		int m=0;//ddddddddddddddddddddddddddddddd
@@ -23,6 +24,8 @@ public class FirstPastThePost extends VotingSystem {
 				System.out.println(++m +" "+ c);
 			}
 		}
+		
+		giveFunding(nvList, npList);
 	}
 
 }

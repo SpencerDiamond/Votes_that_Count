@@ -23,11 +23,11 @@ public class Candidate extends Citizen{
 		super();
 		setVotes(pVotes);
 	}	
-	public Candidate(float pCiv, float pEcon, float pSoc) {
+	public Candidate(double pCiv, double pEcon, double pSoc) {
 		super(pCiv, pEcon, pSoc);
 		setVotes(0);
 	}
-	public Candidate(float pCiv, float pEcon, float pSoc, int pVotes) {
+	public Candidate(double pCiv, double pEcon, double pSoc, int pVotes) {
 		super(pCiv, pEcon, pSoc);
 		setVotes(pVotes);
 	}
@@ -39,47 +39,47 @@ public class Candidate extends Citizen{
 		super(pParty);
 		setVotes(pVotes);
 	}	
-	public Candidate(float pCiv, float pEcon, float pSoc, Party pParty) {
+	public Candidate(double pCiv, double pEcon, double pSoc, Party pParty) {
 		super(pCiv, pEcon, pSoc, pParty);
 		setVotes(0);
 	}
-	public Candidate(float pCiv, float pEcon, float pSoc, int pVotes, Party pParty) {
+	public Candidate(double pCiv, double pEcon, double pSoc, int pVotes, Party pParty) {
 		super(pCiv, pEcon, pSoc, pParty);
 		setVotes(pVotes);
 	}
-	public Candidate(float pAppRad) {
+	public Candidate(double pAppRad) {
 		super(pAppRad);
 		setVotes(0);
 	}	
-	public Candidate(int pVotes, float pAppRad) {
+	public Candidate(int pVotes, double pAppRad) {
 		super(pAppRad);
 		setVotes(pVotes);
 	}	
-	public Candidate(float pCiv, float pEcon, float pSoc, float pAppRad) {
+	public Candidate(double pCiv, double pEcon, double pSoc, double pAppRad) {
 		super(pCiv, pEcon, pSoc, pAppRad);
 		setVotes(0);
 	}
-	public Candidate(float pCiv, float pEcon, float pSoc, float pAppRad, int pVotes) {
+	public Candidate(double pCiv, double pEcon, double pSoc, double pAppRad, int pVotes) {
 		super(pCiv, pEcon, pSoc, pAppRad);
 		setVotes(pVotes);
 	}
-	public Candidate(float pAppRad , Party pParty) {
+	public Candidate(double pAppRad , Party pParty) {
 		super(pAppRad, pParty);
 		setVotes(0);
 	}	
-	public Candidate(float pAppRad , int pVotes, Party pParty) {
+	public Candidate(double pAppRad , int pVotes, Party pParty) {
 		super(pAppRad, pParty);
 		setVotes(pVotes);
 	}	
-	public Candidate(float pCiv, float pEcon, float pSoc, float pAppRad, Party pParty) {
+	public Candidate(double pCiv, double pEcon, double pSoc, double pAppRad, Party pParty) {
 		super(pCiv, pEcon, pSoc, pAppRad, pParty);
 		setVotes(0);
 	}
-	public Candidate(float pCiv, float pEcon, float pSoc, float pAppRad, int pVotes, Party pParty) {
+	public Candidate(double pCiv, double pEcon, double pSoc, double pAppRad, int pVotes, Party pParty) {
 		super(pCiv, pEcon, pSoc, pAppRad, pParty);
 		setVotes(pVotes);
 	}
-	public Candidate(float pCiv, float pEcon, float pSoc, String s) {
+	public Candidate(double pCiv, double pEcon, double pSoc, String s) {
 		super(pCiv, pEcon, pSoc);
 	}
 	
@@ -96,6 +96,10 @@ public class Candidate extends Citizen{
 		return mVotes;
 	}
 	
+	public void reset() {
+		setVotes(0);
+	}
+	
 	//print method
 	@Override
 	public String toString() {
@@ -103,8 +107,9 @@ public class Candidate extends Citizen{
 	}
 	
 	@Override
-	public Party findParty(ArrayList<Party> partyList) {
-		Party newParty = super.findParty(partyList);
+	public Party findParty(ArrayList<Party> pList) {
+		ArrayList<Party> npList = new ArrayList<>(pList);
+		Party newParty = super.findParty(npList);
 		
 		if (newParty == null) {
 			Party indyParty = new Party(getCiv(), getEcon(), getSoc(), true);

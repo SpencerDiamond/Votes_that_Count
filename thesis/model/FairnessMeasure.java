@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public abstract class FairnessMeasure {
 	//instance variables
-	private ArrayList<Voter> voterList;
-	private ArrayList<Candidate> candList;
-	private ArrayList<Party> partyList;
-	private ArrayList<Candidate> winnerList;
+	private ArrayList<Voter> mVoterList;
+	private ArrayList<Candidate> mCandList;
+	private ArrayList<Party> mPartyList;
+	private ArrayList<Candidate> mWinnerList;
 	private VotingSystem mVotingSystem;
 	
 	//constructors
@@ -28,16 +28,16 @@ public abstract class FairnessMeasure {
 	
 	//mutator methods
 	public void setVoterList(ArrayList<Voter> vList) {
-		voterList = vList;
+		mVoterList = vList;
 	}
 	public void setCandList(ArrayList<Candidate> cList) {
-		candList = cList;
+		mCandList = cList;
 	}
 	public void setPartyList(ArrayList<Party> pList) {
-		partyList = pList;
+		mPartyList = pList;
 	}
 	public void setWinList(ArrayList<Candidate> wList) {
-		winnerList = wList;
+		mWinnerList = wList;
 	}
 	public void setVotingSystem(VotingSystem pVotingSystem) {
 		mVotingSystem = pVotingSystem;
@@ -45,16 +45,16 @@ public abstract class FairnessMeasure {
 		
 	//accessor methods
 	public ArrayList<Voter> getVoterList() {
-		return voterList;
+		return mVoterList;
 	}
 	public ArrayList<Candidate> getCandList() {
-		return candList;
+		return mCandList;
 	}
 	public ArrayList<Party> getPartyList() {
-		return partyList;
+		return mPartyList;
 	}
 	public ArrayList<Candidate> getWinList() {
-		return winnerList;
+		return mWinnerList;
 	}
 	public VotingSystem getVotingSystem() {
 		return mVotingSystem;

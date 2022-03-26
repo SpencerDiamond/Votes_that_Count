@@ -5,8 +5,8 @@ import java.util.Comparator;
 
 public class Voter extends Citizen{
 	//instance variables
-	private float mSatisfaction;
-	private ArrayList<Candidate> mPrefList;
+	private double mSatisfaction;
+	private ArrayList<Candidate> mPrefList = new ArrayList<>();
 	
 	//constructors
 	public Voter() { 
@@ -18,40 +18,40 @@ public class Voter extends Citizen{
 			setPrefList(((Voter) pe).getPrefList());
 		}
 	}
-	public Voter(float pAppRad) { 
+	public Voter(double pAppRad) { 
 		super(pAppRad);
 	}	
-	public Voter(float pCiv, float pEcon, float pSoc) {
+	public Voter(double pCiv, double pEcon, double pSoc) {
 		super(pCiv, pEcon, pSoc);
 	}	
-	public Voter(float pCiv, float pEcon, float pSoc, float pAppRad) {
+	public Voter(double pCiv, double pEcon, double pSoc, double pAppRad) {
 		super(pCiv, pEcon, pSoc, pAppRad);
 	}
 	public Voter(Party pParty) { 
 		super(pParty);
 	}	
-	public Voter(float pAppRad, Party pParty) { 
+	public Voter(double pAppRad, Party pParty) { 
 		super(pParty);
 	}	
-	public Voter(float pCiv, float pEcon, float pSoc, Party pParty) {
+	public Voter(double pCiv, double pEcon, double pSoc, Party pParty) {
 		super(pCiv, pEcon, pSoc, pParty);
 	}	
-	public Voter(float pCiv, float pEcon, float pSoc, float pAppRad, Party pParty) {
+	public Voter(double pCiv, double pEcon, double pSoc, double pAppRad, Party pParty) {
 		super(pCiv, pEcon, pSoc, pParty);
 	}
 	public Voter(ArrayList<Candidate> pPrefList) { 
 		super();
 		setPrefList(pPrefList);
 	}	
-	public Voter(float pAppRad, ArrayList<Candidate> pPrefList) { 
+	public Voter(double pAppRad, ArrayList<Candidate> pPrefList) { 
 		super(pAppRad);
 		setPrefList(pPrefList);
 	}	
-	public Voter(float pCiv, float pEcon, float pSoc, ArrayList<Candidate> pPrefList) {
+	public Voter(double pCiv, double pEcon, double pSoc, ArrayList<Candidate> pPrefList) {
 		super(pCiv, pEcon, pSoc);
 		setPrefList(pPrefList);
 	}	
-	public Voter(float pCiv, float pEcon, float pSoc, float pAppRad, ArrayList<Candidate> pPrefList) {
+	public Voter(double pCiv, double pEcon, double pSoc, double pAppRad, ArrayList<Candidate> pPrefList) {
 		super(pCiv, pEcon, pSoc, pAppRad);
 		setPrefList(pPrefList);
 	}
@@ -59,21 +59,21 @@ public class Voter extends Citizen{
 		super(pParty);
 		setPrefList(pPrefList);
 	}	
-	public Voter(float pAppRad, Party pParty, ArrayList<Candidate> pPrefList) { 
+	public Voter(double pAppRad, Party pParty, ArrayList<Candidate> pPrefList) { 
 		super(pParty);
 		setPrefList(pPrefList);
 	}	
-	public Voter(float pCiv, float pEcon, float pSoc, Party pParty, ArrayList<Candidate> pPrefList) {
+	public Voter(double pCiv, double pEcon, double pSoc, Party pParty, ArrayList<Candidate> pPrefList) {
 		super(pCiv, pEcon, pSoc, pParty);
 		setPrefList(pPrefList);
 	}	
-	public Voter(float pCiv, float pEcon, float pSoc, float pAppRad, Party pParty, ArrayList<Candidate> pPrefList) {
+	public Voter(double pCiv, double pEcon, double pSoc, double pAppRad, Party pParty, ArrayList<Candidate> pPrefList) {
 		super(pCiv, pEcon, pSoc, pParty);
 		setPrefList(pPrefList);
 	}
 	
 	//mutator methods
-	public void setSatisfaction(float pSatisfaction) {
+	public void setSatisfaction(double pSatisfaction) {
 		mSatisfaction = pSatisfaction;
 	}
 	public void setPrefList(ArrayList<Candidate> pPrefList) {
@@ -81,11 +81,16 @@ public class Voter extends Citizen{
 	}
 	
 	//accessor method
-	public float getSatisfaction() {
+	public double getSatisfaction() {
 		return mSatisfaction;
 	}
 	public ArrayList<Candidate> getPrefList() {
 		return mPrefList;
+	}
+	
+	public void reset() {
+		setSatisfaction(0);
+		setPrefList(new ArrayList<>());
 	}
 	
 	//print method
@@ -94,17 +99,17 @@ public class Voter extends Citizen{
 		return "Voter: " + super.toString() +","+ getAppRad();// +","+ getSatisfaction() +" - "+ getParty();
 	}
 	
-	public ArrayList<Candidate> findPrefList(ArrayList<Candidate> candList) {
-		ArrayList<Candidate> cList = new ArrayList<>(candList);
+	public ArrayList<Candidate> findPrefList(ArrayList<Candidate> cList) {
+		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		ArrayList<Candidate> rList = new ArrayList<>();
 		
-		cList.sort(new Comparator<Candidate>() {
+		ncList.sort(new Comparator<Candidate>() {
 	        @Override
 	        public int compare(Candidate o1, Candidate o2) {
-	        	float thisNorm = dNorm(o1);
-        		float thatNorm = dNorm(o2);
-        		float thisPNorm;
-        		float thatPNorm;
+	        	double thisNorm = dNorm(o1);
+        		double thatNorm = dNorm(o2);
+        		double thisPNorm;
+        		double thatPNorm;
         		
         		if (getParty() != null) { //If Voter has a Party
 	        		thisPNorm = getParty().dNorm(o1);
@@ -134,16 +139,16 @@ public class Voter extends Citizen{
 	        }
 	    });
 		
-		for (Candidate c: cList) {
+		for (Candidate c: ncList) {
 			if (dNorm(c) > getAppRad()) {
 				rList.add(c);
 			}
 		}
 		for (Candidate r: rList) {
-			cList.remove(r);
+			ncList.remove(r);
 		}
 		
-		return cList;
+		return ncList;
 	}
 	
 }

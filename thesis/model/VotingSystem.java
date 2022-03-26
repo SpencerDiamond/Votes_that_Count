@@ -14,15 +14,47 @@ public abstract class VotingSystem implements VotingFunctions {
 	
 	//constructors
 	public VotingSystem(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
-		setVoterList(vList);
-		setCandList(cList);
-		setPartyList(pList);
+		ArrayList<Voter> nvList = new ArrayList<>();
+		ArrayList<Candidate> ncList = new ArrayList<>();
+		ArrayList<Party> npList = new ArrayList<>();
+		
+		for (Voter v: vList) {
+			nvList.add(new Voter(v));
+		}
+		for (Candidate c: cList) {
+			ncList.add(new Candidate(c));
+		}
+		for (Party p: pList) {
+			npList.add(new Party(p));
+		}
+		
+		setVoterList(nvList);
+		setCandList(ncList);
+		setPartyList(npList);
 	}
 	public VotingSystem(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, ArrayList<Candidate> wList) {
-		setVoterList(vList);
-		setCandList(cList);
-		setPartyList(pList);
-		setWinList(wList);
+		ArrayList<Voter> nvList = new ArrayList<>();
+		ArrayList<Candidate> ncList = new ArrayList<>();
+		ArrayList<Party> npList = new ArrayList<>();
+		ArrayList<Candidate> nwList = new ArrayList<>();
+		
+		for (Voter v: vList) {
+			nvList.add(new Voter(v));
+		}
+		for (Candidate c: cList) {
+			ncList.add(new Candidate(c));
+		}
+		for (Party p: pList) {
+			npList.add(new Party(p));
+		}		
+		for (Candidate w: wList) {
+			nwList.add(new Candidate(w));
+		}
+		
+		setVoterList(nvList);
+		setCandList(ncList);
+		setPartyList(npList);
+		setWinList(nwList);
 	}
 	
 	//mutator methods
@@ -56,13 +88,25 @@ public abstract class VotingSystem implements VotingFunctions {
 		return mWinnerList;
 	}
 	
+	public void reset() {
+		for (Voter v: getVoterList()) {
+			v.reset();
+		}
+		for (Candidate c: getCandList()) {
+			c.reset();
+		}
+		for (Party p: getPartyList()) {
+			p.reset();
+		}
+	}
+	
 	//Assigns Citizens to Parties and makes candLists for the Parties
 	public void assignParty(Citizen cit){
 		if (cit.getParty() == null) {
 			cit.setParty(cit.findParty(getPartyList()));
-		}
-		if (cit instanceof Candidate) {
-			cit.getParty().add((Candidate) cit);
+			if (cit instanceof Candidate) {
+				cit.getParty().add((Candidate) cit);
+			}
 		}
 	}
 	
@@ -105,9 +149,9 @@ public abstract class VotingSystem implements VotingFunctions {
 		ArrayList<Candidate> tcList = new ArrayList<>();
 		Candidate winner = null;
 		Voter aveVoter = null;
-		float aveCiv = 0;
-		float aveEcon = 0;
-		float aveSoc = 0;
+		double aveCiv = 0;
+		double aveEcon = 0;
+		double aveSoc = 0;
 		
 		for (Candidate c: ncList) {
 			if (c.getVotes() == tieVotes) {
@@ -160,11 +204,15 @@ public abstract class VotingSystem implements VotingFunctions {
 		return winner;
 	}
 	
-	public Candidate findWin(ArrayList<Voter> vList, ArrayList<Candidate> cList, boolean withoutTies) {//allows top candidate to be found while ignoring ties, specifically for use with Instant Runoff and Bucklin
+	public Candidate findWin(ArrayList<Voter> vList, ArrayList<Candidate> cList, boolean withoutties) {//allows top candidate to be found while ignoring ties, specifically for use with Instant Runoff and Bucklin
 		//ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		Candidate winner = null;
-		
+
+		if (ncList.size() == 0) {
+			System.out.println("Something Wrong: no Candidates findWin(withoutties)");
+			return winner;
+		}
 		if (ncList.size() == 1) {
 			winner = ncList.get(0);
 			return winner;
@@ -186,6 +234,103 @@ public abstract class VotingSystem implements VotingFunctions {
 		winner = ncList.get(0);
 		
 		return winner;
+	}
+	
+	public int giveFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
+		ArrayList<Voter> nvList = new ArrayList<>(vList);
+		ArrayList<Party> npList = new ArrayList<>(pList);
+		int ballots = 0;
+		int voterPercent = 0;
+		int countPercent = 0;
+		
+		if (nvList.isEmpty() || npList.isEmpty()) {
+			System.out.println("something wrong");
+			return 0;//this uses the return keyword to end the method before divide by zero/indexing error can occur
+		}
+		
+		for (Party p: npList) {
+			p.reset();
+		}
+		
+		for (Voter v: nvList) {
+			if (v.getParty() != null) {
+				v.getParty().addVoter();
+			}
+			if (!v.getPrefList().isEmpty()) {
+				v.getPrefList().get(0).getParty().addCount();
+				ballots++;
+			}
+		}
+		
+		for (Party p: npList) {
+			voterPercent = (int) ((((double) p.getVoterTotal()) / ballots) * 100);
+			countPercent = (int) ((((double) p.getCountTotal()) / ballots) * 100);
+			System.out.println(ballots +","+ p.getVoterTotal() +","+ voterPercent +","+ p.getCountTotal() +","+ countPercent);
+			p.setFunding(voterPercent + (countPercent * 5));
+		}
+		
+		return 0;//returned number is not used, only here for error prevention
+	}
+	
+	public void drop(){
+		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
+		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
+		ArrayList<Candidate> rcList = new ArrayList<>();
+		ArrayList<Party> npList = new ArrayList<>(getPartyList());
+		ArrayList<Party> ipList = new ArrayList<>();
+		ArrayList<Party> rpList = new ArrayList<>();
+		int topFunding;
+		
+		for (Candidate c: ncList) {
+			if (c.getParty() == null) {
+				rcList.add(c);
+			}
+		}
+		for (Candidate rc: rcList) {
+			ncList.remove(rc);
+			nvList.add(new Voter(rc));
+		}
+
+		for (Party p: npList) {
+			if (p.getIndy()) {
+				ipList.add(p);
+			}
+		}
+		if (!ipList.isEmpty()) {
+			ipList.sort(new Comparator<Party>() {
+		        @Override
+		        public int compare(Party o1, Party o2) {
+	        		if (o1.getFunding() < o2.getFunding()) {
+	        			return 1;
+	        		} else if (o1.getFunding() == o2.getFunding()) {
+	        			return 0;
+	        		} else {
+	        			return -1;
+	        		}
+	        	}
+		    });
+			topFunding = ipList.get(0).getFunding();
+			for (Party ip: ipList) {
+				if (ip.getFunding() == topFunding) {
+					ip.setIndy(false);
+				} else {
+					rpList.add(ip);
+				}
+			}
+		}
+		
+		for (Party p: npList) {
+			if (p.getCandList().isEmpty()) {
+				rpList.add(p);
+			}
+		}
+		for (Party rp: rpList) {
+			npList.remove(rp);
+		}
+		
+		setVoterList(nvList);
+		setCandList(ncList);
+		setPartyList(npList);
 	}
 
 }

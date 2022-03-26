@@ -4,9 +4,9 @@ import java.util.Random;
 
 public abstract class PolEntity {//implements Comparable<PolEntity> { //political entity
 	//instance variables
-	private float mCiv; //coordinate on Hierarchical/Individualistic (civil) axis
-	private float mEcon; //coordinate on Socialist/Capitalist (economic) axis
-	private float mSoc; //coordinate on the Right/Left (social) axis
+	private double mCiv; //coordinate on Hierarchical/Individualistic (civil) axis
+	private double mEcon; //coordinate on Socialist/Capitalist (economic) axis
+	private double mSoc; //coordinate on the Right/Left (social) axis
 	protected Random r = new Random();
 	protected static final PolEntity origin = new Candidate(0,0,0,"s");
 	
@@ -16,7 +16,7 @@ public abstract class PolEntity {//implements Comparable<PolEntity> { //politica
 		setEcon((r.nextFloat() * 200) - 100); //generates a random number in [-100, 100]
 		setSoc((r.nextFloat() * 200) - 100); //generates a random number in [-100, 100]
 	}
-	public PolEntity(float pCiv, float pEcon, float pSoc) {
+	public PolEntity(double pCiv, double pEcon, double pSoc) {
 		setCiv(pCiv);
 		setEcon(pEcon);
 		setSoc(pSoc);
@@ -28,24 +28,24 @@ public abstract class PolEntity {//implements Comparable<PolEntity> { //politica
 	}
 	
 	//mutator methods
-	public void setCiv(float pCiv) {
+	public void setCiv(double pCiv) {
 		mCiv = pCiv;
 	}
-	public void setEcon(float pEcon) {
+	public void setEcon(double pEcon) {
 		mEcon = pEcon;
 	}
-	public void setSoc(float pSoc) {
+	public void setSoc(double pSoc) {
 		mSoc = pSoc;
 	}
 	
 	//accessor methods
-	public float getCiv() {
+	public double getCiv() {
 		return mCiv;
 	}
-	public float getEcon() {
+	public double getEcon() {
 		return mEcon;
 	}
-	public float getSoc() {
+	public double getSoc() {
 		return mSoc;
 	}
 	
@@ -55,13 +55,13 @@ public abstract class PolEntity {//implements Comparable<PolEntity> { //politica
 	}
 	
 	//Finds the magnitude of the separation between two PolEntities
-	public float dNorm(PolEntity pe) { 
-		float civ = pe.getCiv() - getCiv(); //
-		float econ = pe.getEcon() - getEcon(); //These three lines find the difference vector between the two points
-		float soc = pe.getSoc() - getSoc(); //
+	public double dNorm(PolEntity pe) { 
+		double civ = pe.getCiv() - getCiv(); //
+		double econ = pe.getEcon() - getEcon(); //These three lines find the difference vector between the two points
+		double soc = pe.getSoc() - getSoc(); //
 		
-		float dot = civ*civ + econ*econ + soc*soc; //These two lines find the dot product of the difference vector
-		float norm = (float) Math.sqrt(dot); //then find the root of the dot product to get the norm of the vector
+		double dot = civ*civ + econ*econ + soc*soc; //These two lines find the dot product of the difference vector
+		double norm = (double) Math.sqrt(dot); //then find the root of the dot product to get the norm of the vector
 		return norm;
 	}
 

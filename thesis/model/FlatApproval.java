@@ -11,6 +11,7 @@ public class FlatApproval extends VotingSystem {
 	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
+		ArrayList<Party> npList = new ArrayList<>(getPartyList());
 		
 		int m=0;//ddddddddddddddddddddd
 		
@@ -24,6 +25,7 @@ public class FlatApproval extends VotingSystem {
 			}
 		}
 		
+		giveFunding(nvList, npList);
 	}
 
 }

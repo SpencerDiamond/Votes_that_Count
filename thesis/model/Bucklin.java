@@ -9,7 +9,7 @@ public class Bucklin extends VotingSystem {
 	
 	public Bucklin(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		super(vList, cList, pList);
-		setNumToBeat(vList.size()/2 + 1); //50% plus 1
+		setNumToBeat((vList.size()/2) + 1); //50% plus 1
 	}
 	public Bucklin(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, int pNumToBeat) {
 		super(vList, cList, pList);
@@ -26,14 +26,26 @@ public class Bucklin extends VotingSystem {
 		return mNumToBeat;
 	}
 	
+	public void lowerNumToBeat() {
+		mNumToBeat--;
+	}
+	
+	public void reset() {
+		super.reset();
+		setNumToBeat((getVoterList().size()/2) + 1);
+	}
+	
 	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
+		ArrayList<Party> npList = new ArrayList<>(getPartyList());
 		Candidate c = null;
+		boolean e=false;
 		int n=0;
 		
 		int m=0;//dddddddddddddddddddd
 
+		System.out.println(getNumToBeat() +","+ getVoterList().size() +","+ getCandList().size());
 		System.out.println("Level 1");
 		for (Voter v: nvList) {
 			v.setPrefList(v.findPrefList(ncList));
@@ -41,9 +53,17 @@ public class Bucklin extends VotingSystem {
 				c = v.getPrefList().get(0);
 				c.addVote();
 				System.out.println(++m +" "+ c);
+			} else if (e) {
+				lowerNumToBeat();
+				e = false;
+			} else {
+				e = true;
 			}
 		}
-		while (findWin(nvList, ncList, true).getVotes() < getNumToBeat() && cList.size() > n) {
+		
+		giveFunding(nvList, npList);
+		
+		while (findWin(nvList, ncList, true).getVotes() < getNumToBeat() && ncList.size() > n) {
 			System.out.println("Level "+ (n+2));
 			giveVotes(nvList, ncList, ++n);
 		}

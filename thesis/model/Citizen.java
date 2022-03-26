@@ -6,7 +6,7 @@ import java.util.Comparator;
 public abstract class Citizen extends PolEntity {
 	//instance variables
 	private Party mParty;
-	private float mAppRad; //approval radius
+	private double mAppRad; //approval radius
 	
 	public Citizen() {
 		super();
@@ -21,15 +21,15 @@ public abstract class Citizen extends PolEntity {
 			setAppRad(Math.abs(r.nextFloat() * 200)); //generates a random number in [0, 200]
 		}
 	}
-	public Citizen(float pAppRad) {
+	public Citizen(double pAppRad) {
 		super();
 		setAppRad(pAppRad);
 	}
-	public Citizen(float pCiv, float pEcon, float pSoc) {
+	public Citizen(double pCiv, double pEcon, double pSoc) {
 		super(pCiv, pEcon, pSoc);
 		setAppRad(Math.abs(r.nextFloat() * 200)); //generates a random number in [0, 200]
 	}
-	public Citizen(float pCiv, float pEcon, float pSoc, float pAppRad) {
+	public Citizen(double pCiv, double pEcon, double pSoc, double pAppRad) {
 		super(pCiv, pEcon, pSoc);
 		setAppRad(pAppRad);
 	}
@@ -38,17 +38,17 @@ public abstract class Citizen extends PolEntity {
 		setAppRad(Math.abs(r.nextFloat() * 200)); //generates a random number in [0, 200]
 		setParty(pParty);
 	}
-	public Citizen(float pAppRad, Party pParty) {
+	public Citizen(double pAppRad, Party pParty) {
 		super();
 		setAppRad(pAppRad);
 		setParty(pParty);
 	}
-	public Citizen(float pCiv, float pEcon, float pSoc, Party pParty) {
+	public Citizen(double pCiv, double pEcon, double pSoc, Party pParty) {
 		super(pCiv, pEcon, pSoc);
 		setAppRad(Math.abs(r.nextFloat() * 200)); //generates a random number in [0, 200]
 		setParty(pParty);
 	}
-	public Citizen(float pCiv, float pEcon, float pSoc, float pAppRad, Party pParty) {
+	public Citizen(double pCiv, double pEcon, double pSoc, double pAppRad, Party pParty) {
 		super(pCiv, pEcon, pSoc);
 		setAppRad(pAppRad);
 		setParty(pParty);
@@ -58,7 +58,7 @@ public abstract class Citizen extends PolEntity {
 	public void setParty(Party pParty) {
 		mParty = pParty;
 	}
-	public void setAppRad(float pAppRad) {
+	public void setAppRad(double pAppRad) {
 		mAppRad = pAppRad;
 	}
 	
@@ -66,7 +66,7 @@ public abstract class Citizen extends PolEntity {
 	public Party getParty(){
 		return mParty;
 	}
-	public float getAppRad() {
+	public double getAppRad() {
 		return mAppRad;
 	}
 	
@@ -76,14 +76,16 @@ public abstract class Citizen extends PolEntity {
 		return super.toString();
 	}
 	
-	public Party findParty(ArrayList<Party> partyList) {
+	public Party findParty(ArrayList<Party> pList) {
+		ArrayList<Party> npList = new ArrayList<>(pList);
 		Party newParty = null;
 		
-		partyList.sort(new Comparator<Party>() {
+		npList.sort(new Comparator<Party>() {
 	        @Override
 	        public int compare(Party o1, Party o2) {
-	        	float thisNorm = dNorm(o1);
-        		float thatNorm = dNorm(o2);
+	        	double thisNorm = dNorm(o1);
+        		double thatNorm = dNorm(o2);
+        		
         		if (thisNorm > thatNorm) {
         			return 1;
         		} else if (thisNorm == thatNorm) {
@@ -94,8 +96,8 @@ public abstract class Citizen extends PolEntity {
         	}
 	    });
 		
-		if (dNorm(partyList.get(0)) <= getAppRad()) {
-			newParty = partyList.get(0);
+		if (dNorm(npList.get(0)) <= getAppRad()) {
+			newParty = npList.get(0);
 		}
 		
 		return newParty;
