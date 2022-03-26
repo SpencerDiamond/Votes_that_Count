@@ -13,14 +13,14 @@ public class FlatApproval extends VotingSystem {
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		ArrayList<Party> npList = new ArrayList<>(getPartyList());
 		
-		int m=0;//ddddddddddddddddddddd
+		//int m=0;//ddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
 			v.setPrefList(v.findPrefList(ncList));
 			if (!v.getPrefList().isEmpty()) {
 				for (Candidate c: v.getPrefList()) {
 					c.addVote();
-					System.out.println(++m +" "+ c);
+					//System.out.println(++m +" "+ c);
 				}
 			}
 		}

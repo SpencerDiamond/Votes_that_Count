@@ -66,14 +66,14 @@ public class InstantRunoff extends VotingSystem {
 		Candidate c = null;
 		boolean e=false;
 		
-		int m=0;//ddddddddddddddddddddddd
+		//int m=0;//ddddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
 			v.setPrefList(v.findPrefList(ncList));
 			if (!v.getPrefList().isEmpty()) {
 				c = v.getPrefList().get(0);
 				c.addVote();
-				System.out.println(++m +" "+ c);
+				//System.out.println(++m +" "+ c);
 			} else if (e) {
 				lowerNumToBeat();
 				e = false;
@@ -85,7 +85,7 @@ public class InstantRunoff extends VotingSystem {
 		giveFunding(nvList, npList);
 		
 		while ((findWin(nvList, ncList, true).getVotes() < getNumToBeat()) && (ncList.size() > 1)) {
-			m=0;//ddddddddddddddddddd
+			//m=0;//ddddddddddddddddddd
 			r = findLoser(ncList);
 			System.out.println("Removing "+ r);
 			ncList.remove(r);
@@ -95,7 +95,7 @@ public class InstantRunoff extends VotingSystem {
 						if (v.getPrefList().size() > 1) {
 							c = v.getPrefList().get(1);
 							c.addVote();
-							System.out.println(++m +" "+ c);
+							//System.out.println(++m +" "+ c);
 						}
 					}
 					v.getPrefList().remove(r);

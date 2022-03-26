@@ -15,7 +15,7 @@ public class Voter extends Citizen{
 	public Voter(PolEntity pe) {
 		super(pe);
 		if (pe instanceof Voter) {
-			setPrefList(((Voter) pe).getPrefList());
+			setPrefList(new ArrayList<>(((Voter) pe).getPrefList()));
 		}
 	}
 	public Voter(double pAppRad) { 

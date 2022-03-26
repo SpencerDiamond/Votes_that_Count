@@ -1,7 +1,6 @@
 package thesis.model;
 
 import java.util.ArrayList;
-//import java.util.Comparator;
 import java.util.Comparator;
 
 public class Party extends PolEntity{
@@ -25,7 +24,7 @@ public class Party extends PolEntity{
 			setVoterTotal(((Party) pe).getVoterTotal());
 			setCountTotal(((Party) pe).getCountTotal());
 			setIndy(((Party) pe).getIndy());
-			setCandList(((Party) pe).getCandList());
+			setCandList(new ArrayList<>(((Party) pe).getCandList()));
 		} else {
 			setFunding(0);
 			setIndy(false);

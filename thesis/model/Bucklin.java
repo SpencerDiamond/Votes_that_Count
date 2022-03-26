@@ -43,7 +43,7 @@ public class Bucklin extends VotingSystem {
 		boolean e=false;
 		int n=0;
 		
-		int m=0;//dddddddddddddddddddd
+		//int m=0;//dddddddddddddddddddd
 
 		System.out.println(getNumToBeat() +","+ getVoterList().size() +","+ getCandList().size());
 		System.out.println("Level 1");
@@ -52,7 +52,7 @@ public class Bucklin extends VotingSystem {
 			if (!v.getPrefList().isEmpty()) {
 				c = v.getPrefList().get(0);
 				c.addVote();
-				System.out.println(++m +" "+ c);
+				//System.out.println(++m +" "+ c);
 			} else if (e) {
 				lowerNumToBeat();
 				e = false;
@@ -72,13 +72,13 @@ public class Bucklin extends VotingSystem {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		Candidate c = null;
 		
-		int m=0;//ddddddddddddddddddddddddd
+		//int m=0;//ddddddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
 			if (v.getPrefList().size() > n) {
 				c = v.getPrefList().get(n);
 				c.addVote();
-				System.out.println(++m +" "+ c);
+				//System.out.println(++m +" "+ c);
 			}
 		}
 	}

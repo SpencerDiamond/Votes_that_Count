@@ -14,14 +14,14 @@ public class FirstPastThePost extends VotingSystem {
 		ArrayList<Party> npList = new ArrayList<>(getPartyList());
 		Candidate c = null;
 		
-		int m=0;//ddddddddddddddddddddddddddddddd
+		//int m=0;//ddddddddddddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
 			v.setPrefList(v.findPrefList(ncList));
 			if (!v.getPrefList().isEmpty()) {
 				c = v.getPrefList().get(0);
 				c.addVote();
-				System.out.println(++m +" "+ c);
+				//System.out.println(++m +" "+ c);
 			}
 		}
 		

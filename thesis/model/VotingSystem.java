@@ -71,7 +71,7 @@ public abstract class VotingSystem implements VotingFunctions {
 		mWinnerList = wList;
 	}
 	public void add(Candidate pWin) {
-		mWinnerList.add(pWin);
+		mWinnerList.add(new Candidate(pWin));
 	}
 	
 	//accessor methods
@@ -101,10 +101,12 @@ public abstract class VotingSystem implements VotingFunctions {
 	}
 	
 	//Assigns Citizens to Parties and makes candLists for the Parties
-	public void assignParty(Citizen cit){
+	public void assignParty(Citizen cit, ArrayList<Party> pList){
+		ArrayList<Party> npList = new ArrayList<>(pList);
+		
 		if (cit.getParty() == null) {
-			cit.setParty(cit.findParty(getPartyList()));
-			if (cit instanceof Candidate) {
+			cit.setParty(cit.findParty(npList));
+			if ((cit instanceof Candidate) && (!((Candidate) cit).getParty().getCandList().contains(cit))) {
 				cit.getParty().add((Candidate) cit);
 			}
 		}
@@ -161,8 +163,6 @@ public abstract class VotingSystem implements VotingFunctions {
 			newV.setAppRad(400);
 			tvList.add(newV);
 		}
-		System.out.println(tcList);
-		System.out.println(tvList);
 		
 		for (Voter v: tvList) {
 			v.setPrefList(v.findPrefList(tcList));
@@ -198,7 +198,7 @@ public abstract class VotingSystem implements VotingFunctions {
 			
 			winner = aveVoter.findPrefList(tcList).get(0);
 			winner.addVote();
-			System.out.println("Average Vote: "+ winner);
+			//System.out.println("Average Vote: "+ winner);
 		}
 		
 		return winner;
@@ -265,7 +265,6 @@ public abstract class VotingSystem implements VotingFunctions {
 		for (Party p: npList) {
 			voterPercent = (int) ((((double) p.getVoterTotal()) / ballots) * 100);
 			countPercent = (int) ((((double) p.getCountTotal()) / ballots) * 100);
-			System.out.println(ballots +","+ p.getVoterTotal() +","+ voterPercent +","+ p.getCountTotal() +","+ countPercent);
 			p.setFunding(voterPercent + (countPercent * 5));
 		}
 		
