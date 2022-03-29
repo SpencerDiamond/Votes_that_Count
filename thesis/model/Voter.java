@@ -91,7 +91,7 @@ public class Voter extends Citizen{
 	//print method
 	@Override
 	public String toString() {
-		return "Voter: " + super.toString() +","+ getAppRad();// +","+ getSatisfaction() +" - "+ getParty();
+		return "Voter: " + super.toString() +","+ getAppRad() +","+ getSatisf();// +" - "+ getParty();
 	}
 	
 	public void reset() {
@@ -100,9 +100,25 @@ public class Voter extends Citizen{
 	}
 	
 	public void nudge(PolEntity dHat) {
-		setCiv(getCiv() + (dHat.getCiv() * (getSatisf() / 4)));
-		setEcon(getEcon() + (dHat.getEcon() * (getSatisf() / 4)));
-		setSoc(getSoc() + (dHat.getSoc() * (getSatisf() / 4)));
+		double newCiv = getCiv() + (dHat.getCiv() * (getSatisf() / 4));
+		double newEcon = getEcon() + (dHat.getEcon() * (getSatisf() / 4));
+		double newSoc = getSoc() + (dHat.getSoc() * (getSatisf() / 4));
+		
+		if (Math.abs(newCiv) <= 100) {
+			setCiv(newCiv);
+		} else {
+			setCiv(100 * (newCiv/Math.abs(newCiv)));//if newCiv is negative newCiv / |newCiv| will be -1 and if newCiv is positive it will be +1
+		}
+		if (Math.abs(newEcon) <= 100) {
+			setEcon(newEcon);
+		} else {
+			setEcon(100 * (newEcon/Math.abs(newEcon)));//if newEcon is negative newEcon / |newEcon| will be -1 and if newEcon is positive it will be +1
+		}
+		if (Math.abs(newSoc) <= 100) {
+			setSoc(newSoc);
+		} else {
+			setSoc(100 * (newSoc/Math.abs(newSoc)));//if newSoc is negative newSoc / |newSoc| will be -1 and if newSoc is positive it will be +1
+		}//keeps values within the bounds of the coordinate system
 	}
 	
 	public ArrayList<Candidate> findPrefList(ArrayList<Candidate> cList) {

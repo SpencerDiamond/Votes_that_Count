@@ -8,6 +8,9 @@ public class InstantRunoff extends VotingSystem {
 	//instance variables
 	private int mNumToBeat;
 	
+	public InstantRunoff() {
+		super();
+	}
 	public InstantRunoff(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		super(vList, cList, pList);
 		setNumToBeat((vList.size()/2) + 1); //50% plus 1
@@ -87,7 +90,7 @@ public class InstantRunoff extends VotingSystem {
 		while ((findWin(nvList, ncList, true).getVotes() < getNumToBeat()) && (ncList.size() > 1)) {
 			//m=0;//ddddddddddddddddddd
 			r = findLoser(ncList);
-			System.out.println("Removing "+ r);
+			//System.out.println("Removing "+ r);
 			ncList.remove(r);
 			for (Voter v: nvList) {
 				if (v.getPrefList().contains(r)) {

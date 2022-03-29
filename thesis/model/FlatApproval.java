@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class FlatApproval extends VotingSystem {
 
+	public FlatApproval() {
+		super();
+	}
 	public FlatApproval(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		super(vList, cList, pList);
 	}

@@ -13,6 +13,7 @@ public abstract class VotingSystem implements VotingFunctions {
 	protected Random r = new Random();
 	
 	//constructors
+	public VotingSystem() {}
 	public VotingSystem(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		ArrayList<Voter> nvList = new ArrayList<>();
 		ArrayList<Candidate> ncList = new ArrayList<>();
@@ -86,6 +87,38 @@ public abstract class VotingSystem implements VotingFunctions {
 	}
 	public ArrayList<Candidate> getWinList() {
 		return mWinnerList;
+	}
+
+	public Candidate makeElection() {
+		
+		for (Candidate c:  getCandList()) {
+			 assignParty(c,  getPartyList());
+		}
+		for (Candidate c:  getCandList()) {
+			if (c.getParty().getIndy() == true) {
+				 getPartyList().add(c.getParty());
+			}
+		}
+		for (Voter v:  getVoterList()) {
+			 assignParty(v,  getPartyList());
+		}
+		
+		 giveVotes( getVoterList(),  getCandList());
+		 addWin( findWin( getVoterList(),  getCandList()));
+		 findPerformance( getVoterList(),  getWinList().get( getWinList().size() - 1));
+		
+		return  getWinList().get( getWinList().size() - 1);
+	}
+	public void resetElection() {
+		System.out.println();
+		System.out.println();
+		for (Party p:  getPartyList()) {
+			System.out.print(p);
+			p.distributeFunding();
+		}
+		 dropParties();
+		 nudgeVoters( getVoterList(),  getWinList().get( getWinList().size() - 1));
+		 reset();
 	}
 	
 	public void reset() {
@@ -208,7 +241,6 @@ public abstract class VotingSystem implements VotingFunctions {
 	}
 	
 	public Candidate findWin(ArrayList<Voter> vList, ArrayList<Candidate> cList, boolean withoutties) {//allows top candidate to be found while ignoring ties, specifically for use with Instant Runoff and Bucklin
-		//ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		Candidate winner = null;
 
@@ -355,8 +387,8 @@ public abstract class VotingSystem implements VotingFunctions {
 		}
 		
 		rscore = repScore.findScore(rvList, winner) - 50;//find Rep Score based only on Voters that cast at least one vote
-		//perf = (r.nextGaussian() * 10) + rscore;
-		perf = rscore;
+		perf = (r.nextGaussian() * 10) + rscore;
+		//perf = rscore;
 		
 		winner.setPerf(perf);
 	}
@@ -367,8 +399,8 @@ public abstract class VotingSystem implements VotingFunctions {
 		
 		for (Voter v: nvList) {
 			ascore = 100.353 - v.dNorm(winner);
-			//satisf = (r.nextGaussian() * 10) + ascore + winner.getPerf();
-			satisf = ascore + winner.getPerf();
+			satisf = (r.nextGaussian() * 10) + ascore + winner.getPerf();
+			//satisf = ascore + winner.getPerf();
 			v.setSatisf(satisf);
 		}
 	}

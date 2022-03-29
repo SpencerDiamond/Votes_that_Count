@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class FirstPastThePost extends VotingSystem {
 
+	public FirstPastThePost() {
+		super();
+	}
 	public FirstPastThePost(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		super(vList, cList, pList);
 	}

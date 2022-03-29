@@ -7,6 +7,9 @@ public class Bucklin extends VotingSystem {
 	//instance variables
 	private int mNumToBeat;
 	
+	public Bucklin() {
+		super();
+	}
 	public Bucklin(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		super(vList, cList, pList);
 		setNumToBeat((vList.size()/2) + 1); //50% plus 1
@@ -45,8 +48,8 @@ public class Bucklin extends VotingSystem {
 		
 		//int m=0;//dddddddddddddddddddd
 
-		System.out.println(getNumToBeat() +","+ getVoterList().size() +","+ getCandList().size());
-		System.out.println("Level 1");
+		//System.out.println(getNumToBeat() +","+ getVoterList().size() +","+ getCandList().size());
+		//System.out.println("Level 1");
 		for (Voter v: nvList) {
 			v.setPrefList(v.findPrefList(ncList));
 			if (!v.getPrefList().isEmpty()) {
@@ -64,7 +67,7 @@ public class Bucklin extends VotingSystem {
 		giveFunding(nvList, npList);
 		
 		while (findWin(nvList, ncList, true).getVotes() < getNumToBeat() && ncList.size() > n) {
-			System.out.println("Level "+ (n+2));
+			//System.out.println("Level "+ (n+2));
 			giveVotes(nvList, ncList, ++n);
 		}
 	}

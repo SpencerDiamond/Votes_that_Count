@@ -10,19 +10,51 @@ public class LaterNoHelpHarm extends FairnessMeasure {
 	}
 	
 	public boolean makeMeasure() {
-		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
-		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
-		ArrayList<Party> npList = new ArrayList<>(getPartyList());
+		ArrayList<Candidate> nwList = new ArrayList<>();
+		boolean pass=true;
 		
+		for (Candidate cand: getCandList()) {
+			nwList.add(checkWinner(getVotingSystem(), cand));
+		}
+		for (Candidate win: nwList) {
+			if (win.dNorm(getWinList().get(getWinList().size() - 1)) != 0) {
+				pass = false;
+			}
+		}
 		
-		
-		return true;
+		if (pass) {
+			System.out.println("Later No Help/Harm been passed!");
+		} else {
+			System.out.println("Later No Help/Harm been failed.");
+		}
+		return pass;
 	}
 	
 	public Candidate checkWinner(VotingSystem election, Candidate pCand) {
+		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
+		ArrayList<PolEntity> peList = new ArrayList<>();
+		Candidate nWinner=null;
+		VotingSystem nElection;
+		Voter nVoter;
 		
+		for (Voter v: nvList) {
+			if (!v.getPrefList().isEmpty()) {
+				if (v.getPrefList().get(0).equals(pCand)) {
+					nVoter = new Voter(v);
+					nVoter.setAppRad(400);
+					peList.add(nVoter);
+				} else {
+					peList.add(v);
+				}
+			} else {
+				peList.add(v);
+			}
+		}
+		nElection = newElection(election, peList);
+		nElection.reset();
+		nWinner = nElection.makeElection();
 		
-		return pCand;
+		return nWinner;
 	}
 
 }
