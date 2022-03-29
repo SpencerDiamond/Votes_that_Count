@@ -361,12 +361,22 @@ public class Main {
 		CondTest condTest2 = new CondTest(election2);
 		CondTest condTest3 = new CondTest(election3);
 		CondTest condTest4 = new CondTest(election4);
+		
+		IndepOfAlts indep1 = new IndepOfAlts(election1);
+		IndepOfAlts indep2 = new IndepOfAlts(election2);
+		IndepOfAlts indep3 = new IndepOfAlts(election3);
+		IndepOfAlts indep4 = new IndepOfAlts(election4);
+		
+		LaterNoHelpHarm lnhh1 = new LaterNoHelpHarm(election1);
+		LaterNoHelpHarm lnhh2 = new LaterNoHelpHarm(election2);
+		LaterNoHelpHarm lnhh3 = new LaterNoHelpHarm(election3);
+		LaterNoHelpHarm lnhh4 = new LaterNoHelpHarm(election4);
 
 		System.out.println("Start");
-		winners.add(makeElection(election1));
-		winners.add(makeElection(election2));
-		winners.add(makeElection(election3));
-		winners.add(makeElection(election4));
+		winners.add(election1.makeElection());
+		winners.add(election2.makeElection());
+		winners.add(election3.makeElection());
+		winners.add(election4.makeElection());
 		System.out.println();
 		for (Candidate w: winners) {
 			System.out.println(w);
@@ -384,82 +394,92 @@ public class Main {
 		condTest3.makeMeasure();
 		condTest4.makeMeasure();
 		System.out.println();
-		resetElection(election1);
-		resetElection(election2);
-		resetElection(election3);
-		resetElection(election4);
+		indep1.makeMeasure();
+		indep2.makeMeasure();
+		indep3.makeMeasure();
+		indep4.makeMeasure();
+		System.out.println();
+		lnhh1.makeMeasure();
+		lnhh2.makeMeasure();
+		lnhh3.makeMeasure();
+		lnhh4.makeMeasure();
+		System.out.println();
+		election1.resetElection();
+		election2.resetElection();
+		election3.resetElection();
+		election4.resetElection();
 		
-		winners.add(makeElection(election1));
-		resetElection(election1);
-		winners.add(makeElection(election1));
-		resetElection(election1);
-		winners.add(makeElection(election1));
-		resetElection(election1);
-		winners.add(makeElection(election1));
-		resetElection(election1);
-		winners.add(makeElection(election1));
-		resetElection(election1);
-		winners.add(makeElection(election1));
-		resetElection(election1);
-		winners.add(makeElection(election1));
-		resetElection(election1);
-		winners.add(makeElection(election1));
-		resetElection(election1);
-		winners.add(makeElection(election1));
+		winners.add(election1.makeElection());
+		election1.resetElection();
+		winners.add(election1.makeElection());
+		election1.resetElection();
+		winners.add(election1.makeElection());
+		election1.resetElection();
+		winners.add(election1.makeElection());
+		election1.resetElection();
+		winners.add(election1.makeElection());
+		election1.resetElection();
+		winners.add(election1.makeElection());
+		election1.resetElection();
+		winners.add(election1.makeElection());
+		election1.resetElection();
+		winners.add(election1.makeElection());
+		election1.resetElection();
+		winners.add(election1.makeElection());
 		winners.add(null);
-		winners.add(makeElection(election2));
-		resetElection(election2);
-		winners.add(makeElection(election2));
-		resetElection(election2);
-		winners.add(makeElection(election2));
-		resetElection(election2);
-		winners.add(makeElection(election2));
-		resetElection(election2);
-		winners.add(makeElection(election2));
-		resetElection(election2);
-		winners.add(makeElection(election2));
-		resetElection(election2);
-		winners.add(makeElection(election2));
-		resetElection(election2);
-		winners.add(makeElection(election2));
-		resetElection(election2);
-		winners.add(makeElection(election2));
+		winners.add(election2.makeElection());
+		election2.resetElection();
+		winners.add(election2.makeElection());
+		election2.resetElection();
+		winners.add(election2.makeElection());
+		election2.resetElection();
+		winners.add(election2.makeElection());
+		election2.resetElection();
+		winners.add(election2.makeElection());
+		election2.resetElection();
+		winners.add(election2.makeElection());
+		election2.resetElection();
+		winners.add(election2.makeElection());
+		election2.resetElection();
+		winners.add(election2.makeElection());
+		election2.resetElection();
+		winners.add(election2.makeElection());
 		winners.add(null);
-		winners.add(makeElection(election3));
-		resetElection(election3);
-		winners.add(makeElection(election3));
-		resetElection(election3);
-		winners.add(makeElection(election3));
-		resetElection(election3);
-		winners.add(makeElection(election3));
-		resetElection(election3);
-		winners.add(makeElection(election3));
-		resetElection(election3);
-		winners.add(makeElection(election3));
-		resetElection(election3);
-		winners.add(makeElection(election3));
-		resetElection(election3);
-		winners.add(makeElection(election3));
-		resetElection(election3);
-		winners.add(makeElection(election3));
+		winners.add(election3.makeElection());
+		election3.resetElection();
+		winners.add(election3.makeElection());
+		election3.resetElection();
+		winners.add(election3.makeElection());
+		election3.resetElection();
+		winners.add(election3.makeElection());
+		election3.resetElection();
+		winners.add(election3.makeElection());
+		election3.resetElection();
+		winners.add(election3.makeElection());
+		election3.resetElection();
+		winners.add(election3.makeElection());
+		election3.resetElection();
+		winners.add(election3.makeElection());
+		election3.resetElection();
+		winners.add(election3.makeElection());
 		winners.add(null);
-		winners.add(makeElection(election4));
-		resetElection(election4);
-		winners.add(makeElection(election4));
-		resetElection(election4);
-		winners.add(makeElection(election4));
-		resetElection(election4);
-		winners.add(makeElection(election4));
-		resetElection(election4);
-		winners.add(makeElection(election4));
-		resetElection(election4);
-		winners.add(makeElection(election4));
-		resetElection(election4);
-		winners.add(makeElection(election4));
-		resetElection(election4);
-		winners.add(makeElection(election4));
-		resetElection(election4);
-		winners.add(makeElection(election4));
+		winners.add(election4.makeElection());
+		election4.resetElection();
+		winners.add(election4.makeElection());
+		election4.resetElection();
+		winners.add(election4.makeElection());
+		election4.resetElection();
+		winners.add(election4.makeElection());
+		election4.resetElection();
+		winners.add(election4.makeElection());
+		election4.resetElection();
+		winners.add(election4.makeElection());
+		election4.resetElection();
+		winners.add(election4.makeElection());
+		election4.resetElection();
+		winners.add(election4.makeElection());
+		election4.resetElection();
+		winners.add(election4.makeElection());
 		System.out.println();
 		System.out.println();
 		for (Candidate w: winners) {
@@ -476,41 +496,21 @@ public class Main {
 		condTest2.makeMeasure();
 		condTest3.makeMeasure();
 		condTest4.makeMeasure();
-		
-		resetElection(election1);
-		resetElection(election2);
-		resetElection(election3);
-		resetElection(election4);
-	}
-
-	public static Candidate makeElection(VotingSystem election) {
-		for (Candidate c: election.getCandList()) {
-			election.assignParty(c, election.getPartyList());
-		}
-		for (Candidate c: election.getCandList()) {
-			if (c.getParty().getIndy() == true) {
-				election.getPartyList().add(c.getParty());
-			}
-		}
-		for (Voter v: election.getVoterList()) {
-			election.assignParty(v, election.getPartyList());
-		}
-		
-		election.giveVotes(election.getVoterList(), election.getCandList());
-		election.addWin(election.findWin(election.getVoterList(), election.getCandList()));
-		
-		return election.getWinList().get(election.getWinList().size() - 1);
-	}
-	public static void resetElection(VotingSystem election) {
 		System.out.println();
+		indep1.makeMeasure();
+		indep2.makeMeasure();
+		indep3.makeMeasure();
+		indep4.makeMeasure();
 		System.out.println();
-		for (Party p: election.getPartyList()) {
-			System.out.print(p);
-			p.distributeFunding();
-		}
-		election.dropParties();
-		election.nudgeVoters(election.getVoterList(), election.getWinList().get(election.getWinList().size() - 1));
-		election.reset();
+		lnhh1.makeMeasure();
+		lnhh2.makeMeasure();
+		lnhh3.makeMeasure();
+		lnhh4.makeMeasure();
+		System.out.println();
+		election1.resetElection();
+		election2.resetElection();
+		election3.resetElection();
+		election4.resetElection();
 	}
 	
 	//list generating methods
