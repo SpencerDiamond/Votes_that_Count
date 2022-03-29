@@ -37,7 +37,7 @@ public class Voter extends Citizen{
 		super(pCiv, pEcon, pSoc, pParty);
 	}	
 	public Voter(double pCiv, double pEcon, double pSoc, double pAppRad, Party pParty) {
-		super(pCiv, pEcon, pSoc, pParty);
+		super(pCiv, pEcon, pSoc, pAppRad, pParty);
 	}
 	public Voter(ArrayList<Candidate> pPrefList) { 
 		super();
