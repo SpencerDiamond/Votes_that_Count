@@ -356,31 +356,115 @@ public class Main {
 		RepScore repScore2 = new RepScore(election2);
 		RepScore repScore3 = new RepScore(election3);
 		RepScore repScore4 = new RepScore(election4);
+		
+		CondTest condTest1 = new CondTest(election1);
+		CondTest condTest2 = new CondTest(election2);
+		CondTest condTest3 = new CondTest(election3);
+		CondTest condTest4 = new CondTest(election4);
 
 		System.out.println("Start");
 		winners.add(makeElection(election1));
+		winners.add(makeElection(election2));
+		winners.add(makeElection(election3));
+		winners.add(makeElection(election4));
+		System.out.println();
+		for (Candidate w: winners) {
+			System.out.println(w);
+		}
+		winners.add(null);
+		winners.add(null);
+		System.out.println();
+		repScore1.makeMeasure();
+		repScore2.makeMeasure();
+		repScore3.makeMeasure();
+		repScore4.makeMeasure();
+		System.out.println();
+		condTest1.makeMeasure();
+		condTest2.makeMeasure();
+		condTest3.makeMeasure();
+		condTest4.makeMeasure();
+		System.out.println();
+		resetElection(election1);
+		resetElection(election2);
+		resetElection(election3);
+		resetElection(election4);
+		
 		winners.add(makeElection(election1));
+		resetElection(election1);
 		winners.add(makeElection(election1));
+		resetElection(election1);
 		winners.add(makeElection(election1));
+		resetElection(election1);
+		winners.add(makeElection(election1));
+		resetElection(election1);
+		winners.add(makeElection(election1));
+		resetElection(election1);
+		winners.add(makeElection(election1));
+		resetElection(election1);
+		winners.add(makeElection(election1));
+		resetElection(election1);
+		winners.add(makeElection(election1));
+		resetElection(election1);
 		winners.add(makeElection(election1));
 		winners.add(null);
 		winners.add(makeElection(election2));
+		resetElection(election2);
 		winners.add(makeElection(election2));
+		resetElection(election2);
 		winners.add(makeElection(election2));
+		resetElection(election2);
 		winners.add(makeElection(election2));
+		resetElection(election2);
+		winners.add(makeElection(election2));
+		resetElection(election2);
+		winners.add(makeElection(election2));
+		resetElection(election2);
+		winners.add(makeElection(election2));
+		resetElection(election2);
+		winners.add(makeElection(election2));
+		resetElection(election2);
 		winners.add(makeElection(election2));
 		winners.add(null);
 		winners.add(makeElection(election3));
+		resetElection(election3);
 		winners.add(makeElection(election3));
+		resetElection(election3);
 		winners.add(makeElection(election3));
+		resetElection(election3);
 		winners.add(makeElection(election3));
+		resetElection(election3);
+		winners.add(makeElection(election3));
+		resetElection(election3);
+		winners.add(makeElection(election3));
+		resetElection(election3);
+		winners.add(makeElection(election3));
+		resetElection(election3);
+		winners.add(makeElection(election3));
+		resetElection(election3);
 		winners.add(makeElection(election3));
 		winners.add(null);
 		winners.add(makeElection(election4));
+		resetElection(election4);
 		winners.add(makeElection(election4));
+		resetElection(election4);
 		winners.add(makeElection(election4));
+		resetElection(election4);
 		winners.add(makeElection(election4));
+		resetElection(election4);
 		winners.add(makeElection(election4));
+		resetElection(election4);
+		winners.add(makeElection(election4));
+		resetElection(election4);
+		winners.add(makeElection(election4));
+		resetElection(election4);
+		winners.add(makeElection(election4));
+		resetElection(election4);
+		winners.add(makeElection(election4));
+		System.out.println();
+		System.out.println();
+		for (Candidate w: winners) {
+			System.out.println(w);
+		}
 		System.out.println();
 		System.out.println();
 		repScore1.makeMeasure();
@@ -388,10 +472,15 @@ public class Main {
 		repScore3.makeMeasure();
 		repScore4.makeMeasure();
 		System.out.println();
-		System.out.println();
-		for (Candidate w: winners) {
-			System.out.println(w);
-		}
+		condTest1.makeMeasure();
+		condTest2.makeMeasure();
+		condTest3.makeMeasure();
+		condTest4.makeMeasure();
+		
+		resetElection(election1);
+		resetElection(election2);
+		resetElection(election3);
+		resetElection(election4);
 	}
 
 	public static Candidate makeElection(VotingSystem election) {
@@ -408,17 +497,20 @@ public class Main {
 		}
 		
 		election.giveVotes(election.getVoterList(), election.getCandList());
-		election.add(election.findWin(election.getVoterList(), election.getCandList()));
+		election.addWin(election.findWin(election.getVoterList(), election.getCandList()));
 		
+		return election.getWinList().get(election.getWinList().size() - 1);
+	}
+	public static void resetElection(VotingSystem election) {
 		System.out.println();
 		System.out.println();
 		for (Party p: election.getPartyList()) {
 			System.out.print(p);
 			p.distributeFunding();
 		}
-		election.drop();
+		election.dropParties();
+		election.nudgeVoters(election.getVoterList(), election.getWinList().get(election.getWinList().size() - 1));
 		election.reset();
-		return election.getWinList().get(0);
 	}
 	
 	//list generating methods
@@ -431,15 +523,53 @@ public class Main {
 	}
 	public static ArrayList<Candidate> makeCandList(int n) {
 		ArrayList<Candidate> list = new ArrayList<>();
+		ArrayList<Candidate> rList = new ArrayList<>();
+		boolean dupes=true;		
 		for (int j=0; j<n; j++) {
 			list.add(new Candidate());
+		}
+		while (dupes) {//checks for Candidates that are too similar, if two Candidates are less than 1 unit length away from each other, one of them is removed and replaced by a new random Candidate
+			dupes = false;
+			for (Candidate c1: list) {
+				for (Candidate c2: list) {
+					if (!c1.equals(c2) && c1.dNorm(c2) < 1) {
+						rList.add(c2);
+						dupes = true;
+					}
+				}
+			}
+			if (!rList.isEmpty()) {
+				for (Candidate r: rList) {
+					list.remove(r);
+					list.add(new Candidate());
+				}
+			}
 		}
 		return list;	
 	}
 	public static ArrayList<Party> makePartyList(int n) {
 		ArrayList<Party> list = new ArrayList<>();
+		ArrayList<Party> rList = new ArrayList<>();
+		boolean dupes=true;		
 		for (int j=0; j<n; j++) {
 			list.add(new Party());
+		}
+		while (dupes) {//checks for Parties that are too similar, if two Parties are less than 10 unit lengths away from each other, one of them is removed and replaced by a new random Party
+			dupes = false;
+			for (Party p1: list) {
+				for (Party p2: list) {
+					if (!p1.equals(p2) && p1.dNorm(p2) < 1) {
+						rList.add(p2);
+						dupes = true;
+					}
+				}
+			}
+			if (!rList.isEmpty()) {
+				for (Party r: rList) {
+					list.remove(r);
+					list.add(new Party());
+				}
+			}
 		}
 		return list;	
 	}
