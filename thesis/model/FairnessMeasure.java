@@ -1,12 +1,10 @@
 package thesis.model;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public abstract class FairnessMeasure {
 	//instance variable
 	private VotingSystem mVotingSystem;
-	protected Random r = new Random();
 	
 	//constructor
 	public FairnessMeasure(VotingSystem pVotingSystem) {
