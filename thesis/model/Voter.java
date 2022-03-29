@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 public class Voter extends Citizen{
 	//instance variables
-	private double mSatisfaction;
+	private double mSatisf;
 	private ArrayList<Candidate> mPrefList = new ArrayList<>();
 	
 	//constructors
@@ -73,30 +73,36 @@ public class Voter extends Citizen{
 	}
 	
 	//mutator methods
-	public void setSatisfaction(double pSatisfaction) {
-		mSatisfaction = pSatisfaction;
+	public void setSatisf(double pSatisf) {
+		mSatisf = pSatisf;
 	}
 	public void setPrefList(ArrayList<Candidate> pPrefList) {
 		mPrefList = pPrefList;
 	}
 	
 	//accessor method
-	public double getSatisfaction() {
-		return mSatisfaction;
+	public double getSatisf() {
+		return mSatisf;
 	}
 	public ArrayList<Candidate> getPrefList() {
 		return mPrefList;
-	}
-	
-	public void reset() {
-		setSatisfaction(0);
-		setPrefList(new ArrayList<>());
 	}
 	
 	//print method
 	@Override
 	public String toString() {
 		return "Voter: " + super.toString() +","+ getAppRad();// +","+ getSatisfaction() +" - "+ getParty();
+	}
+	
+	public void reset() {
+		setSatisf(0);
+		setPrefList(new ArrayList<>());
+	}
+	
+	public void nudge(PolEntity dHat) {
+		setCiv(getCiv() + (dHat.getCiv() * (getSatisf() / 4)));
+		setEcon(getEcon() + (dHat.getEcon() * (getSatisf() / 4)));
+		setSoc(getSoc() + (dHat.getSoc() * (getSatisf() / 4)));
 	}
 	
 	public ArrayList<Candidate> findPrefList(ArrayList<Candidate> cList) {
@@ -110,6 +116,12 @@ public class Voter extends Citizen{
         		double thatNorm = dNorm(o2);
         		double thisPNorm;
         		double thatPNorm;
+        		
+        		if (o1.getParty() == null || o2.getParty() == null) {
+        			System.out.println("Something wrong!");
+        			System.out.println(o1);
+        			System.out.println(o2);
+        		}
         		
         		if (getParty() != null) { //If Voter has a Party
 	        		thisPNorm = getParty().dNorm(o1);

@@ -110,10 +110,10 @@ public class Party extends PolEntity{
 	}
 	
 	//other instance variable methods
-	public void add(Candidate pCand) {
+	public void addCand(Candidate pCand) {
 		mCandList.add(pCand);
 	}
-	public void drop(Candidate pCand) {
+	public void dropCand(Candidate pCand) {
 		mCandList.remove(pCand);
 		pCand.setParty(null);
 	}
@@ -133,7 +133,7 @@ public class Party extends PolEntity{
 		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
 		int numAfford;
 		
-		numAfford = (int) (((double) getFunding()) / 25);
+		numAfford = (int) (((double) getFunding()) / 27);
 		System.out.println(" -> "+ numAfford);
 		ncList.sort(new Comparator<Candidate>() {
 	        @Override
@@ -150,7 +150,7 @@ public class Party extends PolEntity{
 		
 		for (Candidate c: ncList) {
 			if (ncList.indexOf(c) >= numAfford) {
-				drop(c);
+				dropCand(c);
 			}
 		}
 	}

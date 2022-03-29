@@ -2,14 +2,27 @@ package thesis.model;
 
 import java.util.ArrayList;
 
-public class LaterNoHarm extends FairnessMeasure {
+public class LaterNoHelpHarm extends FairnessMeasure {
 
-	//constructors
-	public LaterNoHarm(VotingSystem pVotingSystem) {
+	//constructor
+	public LaterNoHelpHarm(VotingSystem pVotingSystem) {
 		super(pVotingSystem);
 	}
-	public LaterNoHarm(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, ArrayList<Candidate> wList, VotingSystem pVotingSystem) {
-		super(vList, cList, pList, wList, pVotingSystem);
+	
+	public boolean makeMeasure() {
+		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
+		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
+		ArrayList<Party> npList = new ArrayList<>(getPartyList());
+		
+		
+		
+		return true;
+	}
+	
+	public Candidate checkWinner(VotingSystem election, Candidate pCand) {
+		
+		
+		return pCand;
 	}
 
 }

@@ -4,22 +4,28 @@ import java.util.ArrayList;
 
 public class RepScore extends FairnessMeasure {
 
-	//constructors
+	//constructor
 	public RepScore(VotingSystem pVotingSystem) {
 		super(pVotingSystem);
 	}
-	public RepScore(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, ArrayList<Candidate> wList, VotingSystem pVotingSystem) {
-		super(vList, cList, pList, wList, pVotingSystem);
+	
+	public boolean makeMeasure() {
+		double score;
+		
+		score = findScore(getVoterList(), getWinList().get(getWinList().size() - 1));
+		System.out.println("Representation Score = "+ score +"%");
+		
+		if (score > 50) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
-	public void makeMeasure() {
-		System.out.println("Representation Score = "+ findScore() +"%");
-	}
-	
-	public double findScore() {
+	public double findScore(ArrayList<Voter> vList, Candidate winner) {
 		double score=0;
 		
-		score = (((double) getWinList().get(getWinList().size() - 1).getVotes()) / getVoterList().size()) * 100;
+		score = (((double) winner.getVotes()) / vList.size()) * 100;
 		
 		return score;
 	}
