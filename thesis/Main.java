@@ -405,9 +405,13 @@ public class Main {
 		lnhh4.makeMeasure();
 		System.out.println();
 		election1.resetElection();
+		System.out.println();
 		election2.resetElection();
+		System.out.println();
 		election3.resetElection();
+		System.out.println();
 		election4.resetElection();
+		System.out.println();
 		
 		winners.add(election1.makeElection());
 		election1.resetElection();
@@ -508,9 +512,13 @@ public class Main {
 		lnhh4.makeMeasure();
 		System.out.println();
 		election1.resetElection();
+		System.out.println();
 		election2.resetElection();
+		System.out.println();
 		election3.resetElection();
+		System.out.println();
 		election4.resetElection();
+		System.out.println();
 	}
 	
 	//list generating methods
