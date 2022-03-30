@@ -116,8 +116,8 @@ public abstract class VotingSystem implements VotingFunctions {
 			//System.out.print(p);
 			p.distributeFunding();
 		}
-		 dropParties();
 		 nudgeVoters(getVoterList(), getWinList().get(getWinList().size() - 1));
+		 dropParties();
 		 reset();
 	}
 	
