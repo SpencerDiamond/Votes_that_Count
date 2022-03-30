@@ -11,10 +11,10 @@ public class FirstPastThePost extends VotingSystem {
 		super(vList, cList, pList);
 	}
 
-	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList) {
+	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
-		ArrayList<Party> npList = new ArrayList<>(getPartyList());
+		ArrayList<Party> npList = new ArrayList<>(pList);
 		Candidate c = null;
 		
 		//int m=0;//ddddddddddddddddddddddddddddddd

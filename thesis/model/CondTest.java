@@ -60,7 +60,7 @@ public class CondTest extends FairnessMeasure {
 			}
 		}
 		
-		if (getVotingSystem().findWin(nvList, ncList).equals(nWinner)) {
+		if (getVotingSystem().findWin(nvList, ncList, true).equals(nWinner)) {
 			return pWinner;
 		} else {
 			return pCand;

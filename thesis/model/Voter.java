@@ -126,18 +126,11 @@ public class Voter extends Citizen{
 		ArrayList<Candidate> rList = new ArrayList<>();
 		
 		ncList.sort(new Comparator<Candidate>() {
-	        @Override
 	        public int compare(Candidate o1, Candidate o2) {
 	        	double thisNorm = dNorm(o1);
         		double thatNorm = dNorm(o2);
         		double thisPNorm;
         		double thatPNorm;
-        		
-        		if (o1.getParty() == null || o2.getParty() == null) {
-        			System.out.println("Something wrong!");
-        			System.out.println(o1);
-        			System.out.println(o2);
-        		}
         		
         		if (getParty() != null) { //If Voter has a Party
 	        		thisPNorm = getParty().dNorm(o1);

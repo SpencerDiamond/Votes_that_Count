@@ -81,7 +81,6 @@ public abstract class Citizen extends PolEntity {
 		Party newParty = null;
 		
 		npList.sort(new Comparator<Party>() {
-	        @Override
 	        public int compare(Party o1, Party o2) {
 	        	double thisNorm = dNorm(o1);
         		double thatNorm = dNorm(o2);

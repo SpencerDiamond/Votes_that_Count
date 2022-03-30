@@ -89,35 +89,34 @@ public abstract class VotingSystem implements VotingFunctions {
 		return mWinnerList;
 	}
 
+	//election methods
 	public Candidate makeElection() {
-		
-		for (Candidate c:  getCandList()) {
-			 assignParty(c,  getPartyList());
+		for (Candidate c: getCandList()) {
+			 assignParty(c, getPartyList());
 		}
-		for (Candidate c:  getCandList()) {
+		for (Candidate c: getCandList()) {
 			if (c.getParty().getIndy() == true) {
-				 getPartyList().add(c.getParty());
+				getPartyList().add(c.getParty());
 			}
 		}
-		for (Voter v:  getVoterList()) {
-			 assignParty(v,  getPartyList());
+		for (Voter v: getVoterList()) {
+			 assignParty(v, getPartyList());
 		}
+		initFunding(getVoterList(), getPartyList());
 		
-		 giveVotes( getVoterList(),  getCandList());
-		 addWin( findWin( getVoterList(),  getCandList()));
-		 findPerformance( getVoterList(),  getWinList().get( getWinList().size() - 1));
+		 giveVotes(getVoterList(), getCandList(), getPartyList());
+		 addWin(findWin(getVoterList(), getCandList(), true));
+		 findPerformance(getVoterList(), getWinList().get(getWinList().size() - 1));
 		
-		return  getWinList().get( getWinList().size() - 1);
+		return getWinList().get(getWinList().size() - 1);
 	}
 	public void resetElection() {
-		System.out.println();
-		System.out.println();
-		for (Party p:  getPartyList()) {
+		for (Party p: getPartyList()) {
 			System.out.print(p);
 			p.distributeFunding();
 		}
 		 dropParties();
-		 nudgeVoters( getVoterList(),  getWinList().get( getWinList().size() - 1));
+		 nudgeVoters(getVoterList(), getWinList().get(getWinList().size() - 1));
 		 reset();
 	}
 	
@@ -145,11 +144,14 @@ public abstract class VotingSystem implements VotingFunctions {
 		}
 	}
 	
-	public Candidate findWin(ArrayList<Voter> vList, ArrayList<Candidate> cList) {
+	public Candidate findWin(ArrayList<Voter> vList, ArrayList<Candidate> cList, boolean withoutTies) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		Candidate winner = null;
-		
+
+		if (ncList.size() == 0) {
+			return winner;
+		}
 		if (ncList.size() == 1) {
 			winner = ncList.get(0);
 			return winner;
@@ -170,7 +172,7 @@ public abstract class VotingSystem implements VotingFunctions {
 
 		winner = ncList.get(0);
 		
-		while (ncList.get(0).getVotes() == ncList.get(1).getVotes()) {
+		while ((ncList.get(0).getVotes() == ncList.get(1).getVotes()) && withoutTies) {//allows top candidate to be found while ignoring ties, specifically for use with Instant Runoff and Bucklin
 			winner = breakTie(nvList, ncList, ncList.get(0).getVotes());
 		}
 		
@@ -180,30 +182,38 @@ public abstract class VotingSystem implements VotingFunctions {
 	public Candidate breakTie(ArrayList<Voter> vList, ArrayList<Candidate> cList, int tieVotes) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
+		ArrayList<Party> tpList = new ArrayList<>();
 		ArrayList<Voter> tvList = new ArrayList<>();
 		ArrayList<Candidate> tcList = new ArrayList<>();
-		Candidate winner = null;
+		Voter newNV = null;
+		Voter newTV = null;
 		Voter aveVoter = null;
+		Candidate winner = null;
 		double aveCiv = 0;
 		double aveEcon = 0;
 		double aveSoc = 0;
-
+		
 		for (Candidate c: ncList) {
 			if (c.getVotes() == tieVotes) {
+				c.reset();
 				tcList.add(c);
+				tpList.add(c.getParty());
 			} else {
-				Voter newV = new Voter(c);
-				newV.setAppRad(400);
-				tvList.add(newV);
+				newTV = new Voter(c);
+				tvList.add(newTV);
 			}
 		}
-		
+		for (Voter nv: nvList) {
+			newNV = new Voter(nv);
+			newNV.reset();
+			tvList.add(newNV);
+		}
 		if (ncList.size() > 2) {			
-			for (Voter v: tvList) {
-				v.setPrefList(v.findPrefList(tcList));
+			for (Voter tv: tvList) {
+				tv.setPrefList(tv.findPrefList(tcList));
 			}
 			
-			giveVotes(tvList, tcList);
+			giveVotes(tvList, tcList, tpList);
 			
 			ncList.sort(new Comparator<Candidate>() {
 		        @Override
@@ -240,38 +250,7 @@ public abstract class VotingSystem implements VotingFunctions {
 		return winner;
 	}
 	
-	public Candidate findWin(ArrayList<Voter> vList, ArrayList<Candidate> cList, boolean withoutties) {//allows top candidate to be found while ignoring ties, specifically for use with Instant Runoff and Bucklin
-		ArrayList<Candidate> ncList = new ArrayList<>(cList);
-		Candidate winner = null;
-
-		if (ncList.size() == 0) {
-			System.out.println("Something Wrong: no Candidates findWin(withoutties)");
-			return winner;
-		}
-		if (ncList.size() == 1) {
-			winner = ncList.get(0);
-			return winner;
-		}
-		
-		ncList.sort(new Comparator<Candidate>() {
-	        @Override
-	        public int compare(Candidate o1, Candidate o2) {
-        		if (o1.getVotes() < o2.getVotes()) {
-        			return 1;
-        		} else if (o1.getVotes() == o2.getVotes()) {
-        			return 0;
-        		} else {
-        			return -1;
-        		}
-        	}
-	    });
-
-		winner = ncList.get(0);
-		
-		return winner;
-	}
-	
-	public int giveFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
+	public boolean giveFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Party> npList = new ArrayList<>(pList);
 		int ballots = 0;
@@ -280,7 +259,7 @@ public abstract class VotingSystem implements VotingFunctions {
 		
 		if (nvList.isEmpty() || npList.isEmpty()) {
 			System.out.println("something wrong");
-			return 0;//this uses the return keyword to end the method before divide by zero/indexing error can occur
+			return false;//this uses the return keyword to end the method before divide by zero/indexing error can occur
 		}
 		
 		for (Party p: npList) {
@@ -303,7 +282,34 @@ public abstract class VotingSystem implements VotingFunctions {
 			p.setFunding(voterPercent + (countPercent * 5));
 		}
 		
-		return 0;//returned number is not used, only here for error prevention
+		return true;//returned number is not used, only here for error prevention
+	}
+	public boolean initFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
+		ArrayList<Voter> nvList = new ArrayList<>(vList);
+		ArrayList<Party> npList = new ArrayList<>(pList);
+		int voterPercent = 0;
+		
+		if (nvList.isEmpty() || npList.isEmpty()) {
+			System.out.println("something wrong");
+			return false;//this uses the return keyword to end the method before divide by zero/indexing error can occur
+		}
+		
+		for (Party p: npList) {
+			p.reset();
+		}
+
+		for (Voter v: nvList) {
+			if (v.getParty() != null) {
+				v.getParty().addVoter();
+			}
+		}
+		
+		for (Party p: npList) {
+			voterPercent = (int) ((((double) p.getVoterTotal()) / nvList.size()) * 100);
+			p.setFunding(voterPercent);
+		}
+		
+		return true;//returned number is not used, only here for error prevention
 	}
 	
 	public void dropParties(){
@@ -376,7 +382,7 @@ public abstract class VotingSystem implements VotingFunctions {
 	public void findPerformance(ArrayList<Voter> vList, Candidate winner) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Voter> rvList = new ArrayList<>();
-		RepScore repScore = new RepScore(this);
+		RepScore repScore = new RepScore(this);//dummy RepScore object for finding performance
 		double rscore;//representation score
 		double perf;//performance
 		

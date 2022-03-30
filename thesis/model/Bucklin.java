@@ -33,15 +33,16 @@ public class Bucklin extends VotingSystem {
 		mNumToBeat--;
 	}
 	
+	@Override
 	public void reset() {
 		super.reset();
 		setNumToBeat((getVoterList().size()/2) + 1);
 	}
 	
-	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList) {
+	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
-		ArrayList<Party> npList = new ArrayList<>(getPartyList());
+		ArrayList<Party> npList = new ArrayList<>(pList);
 		Candidate c = null;
 		boolean e=false;
 		int n=0;
@@ -66,7 +67,7 @@ public class Bucklin extends VotingSystem {
 		
 		giveFunding(nvList, npList);
 		
-		while (findWin(nvList, ncList, true).getVotes() < getNumToBeat() && ncList.size() > n) {
+		while (findWin(nvList, ncList, false).getVotes() < getNumToBeat() && ncList.size() > n) {
 			//System.out.println("Level "+ (n+2));
 			giveVotes(nvList, ncList, ++n);
 		}

@@ -8,7 +8,6 @@ public abstract class PolEntity {//implements Comparable<PolEntity> { //politica
 	private double mEcon; //coordinate on Socialist/Capitalist (economic) axis
 	private double mSoc; //coordinate on the Right/Left (social) axis
 	protected Random r = new Random();
-	protected static final PolEntity origin = new Candidate(0,0,0,"s");
 	
 	//constructors
 	public PolEntity() { //creates a PolEntity at a random point
@@ -50,6 +49,7 @@ public abstract class PolEntity {//implements Comparable<PolEntity> { //politica
 	}
 	
 	//print method
+    @Override
 	public String toString() {
 		return getCiv() +","+ getEcon() +","+ getSoc();
 	}
