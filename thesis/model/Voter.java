@@ -160,7 +160,7 @@ public class Voter extends Citizen{
         				if (thisCPNorm > thatCPNorm) {
             				return 1;
             			} else if (thisCPNorm == thatCPNorm) {//Voter is also on the line of symmetry of the Candidates' Parties
-                			return 0;
+                			throw new ArithmeticException("Catistrphic Vote-Level Tie");
             			} else {
             				return -1;
             			}
