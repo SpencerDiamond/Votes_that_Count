@@ -19,7 +19,7 @@ public class FlatApproval extends VotingSystem {
 		//int m=0;//ddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
-			v.setPrefList(v.findPrefList(ncList));
+			v.setPrefList(v.findPrefList(ncList, npList));
 			if (!v.getPrefList().isEmpty()) {
 				for (Candidate c: v.getPrefList()) {
 					c.addVote();

@@ -134,7 +134,7 @@ public class Party extends PolEntity{
 		int numAfford;
 		
 		numAfford = (int) (((double) getFunding()) / 27);
-		System.out.println(" -> "+ numAfford);
+		//System.out.println(" -> "+ numAfford);
 		ncList.sort(new Comparator<Candidate>() {
 	        public int compare(Candidate o1, Candidate o2) {
         		if (o1.getVotes() < o2.getVotes()) {

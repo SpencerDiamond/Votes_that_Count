@@ -72,7 +72,7 @@ public class InstantRunoff extends VotingSystem {
 		//int m=0;//ddddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
-			v.setPrefList(v.findPrefList(ncList));
+			v.setPrefList(v.findPrefList(ncList, npList));
 			if (!v.getPrefList().isEmpty()) {
 				c = v.getPrefList().get(0);
 				c.addVote();

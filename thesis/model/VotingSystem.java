@@ -91,6 +91,7 @@ public abstract class VotingSystem implements VotingFunctions {
 
 	//election methods
 	public Candidate makeElection() {
+		System.out.println(this);
 		for (Candidate c: getCandList()) {
 			 assignParty(c, getPartyList());
 		}
@@ -112,7 +113,7 @@ public abstract class VotingSystem implements VotingFunctions {
 	}
 	public void resetElection() {
 		for (Party p: getPartyList()) {
-			System.out.print(p);
+			//System.out.print(p);
 			p.distributeFunding();
 		}
 		 dropParties();
@@ -210,13 +211,12 @@ public abstract class VotingSystem implements VotingFunctions {
 		}
 		if (ncList.size() > 2) {			
 			for (Voter tv: tvList) {
-				tv.setPrefList(tv.findPrefList(tcList));
+				tv.setPrefList(tv.findPrefList(tcList, tpList));
 			}
 			
 			giveVotes(tvList, tcList, tpList);
 			
 			ncList.sort(new Comparator<Candidate>() {
-		        @Override
 		        public int compare(Candidate o1, Candidate o2) {
 	        		if (o1.getVotes() < o2.getVotes()) {
 	        			return 1;
@@ -242,7 +242,7 @@ public abstract class VotingSystem implements VotingFunctions {
 			aveSoc = aveSoc / nvList.size();
 			aveVoter = new Voter(aveCiv, aveEcon, aveSoc, 400);
 			
-			winner = aveVoter.findPrefList(tcList).get(0);
+			winner = aveVoter.findPrefList(tcList, tpList).get(0);
 			winner.addVote();
 			//System.out.println("Average Vote: "+ winner);
 		}
@@ -284,14 +284,13 @@ public abstract class VotingSystem implements VotingFunctions {
 		
 		return true;//returned number is not used, only here for error prevention
 	}
-	public boolean initFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
+	public void initFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Party> npList = new ArrayList<>(pList);
 		int voterPercent = 0;
 		
 		if (nvList.isEmpty() || npList.isEmpty()) {
-			System.out.println("something wrong");
-			return false;//this uses the return keyword to end the method before divide by zero/indexing error can occur
+				throw new ArithmeticException("Empty List");
 		}
 		
 		for (Party p: npList) {
@@ -308,8 +307,6 @@ public abstract class VotingSystem implements VotingFunctions {
 			voterPercent = (int) ((((double) p.getVoterTotal()) / nvList.size()) * 100);
 			p.setFunding(voterPercent);
 		}
-		
-		return true;//returned number is not used, only here for error prevention
 	}
 	
 	public void dropParties(){
@@ -338,7 +335,6 @@ public abstract class VotingSystem implements VotingFunctions {
 		}
 		if (!ipList.isEmpty()) {
 			ipList.sort(new Comparator<Party>() {
-		        @Override
 		        public int compare(Party o1, Party o2) {
 	        		if (o1.getFunding() < o2.getFunding()) {
 	        			return 1;
@@ -383,7 +379,7 @@ public abstract class VotingSystem implements VotingFunctions {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Voter> rvList = new ArrayList<>();
 		RepScore repScore = new RepScore(this);//dummy RepScore object for finding performance
-		double rscore;//representation score
+		double rscore=0;//representation score
 		double perf;//performance
 		
 		for (Voter v: nvList) {
@@ -391,8 +387,9 @@ public abstract class VotingSystem implements VotingFunctions {
 				rvList.add(v);
 			}
 		}
-		
-		rscore = repScore.findScore(rvList, winner) - 50;//find Rep Score based only on Voters that cast at least one vote
+		if (!rvList.isEmpty()) {
+			rscore = repScore.findScore(rvList, winner) - 50;//find Rep Score based only on Voters that cast at least one vote
+		}
 		perf = (r.nextGaussian() * 10) + rscore;
 		//perf = rscore;
 		
@@ -420,7 +417,11 @@ public abstract class VotingSystem implements VotingFunctions {
 		
 		for (Voter v: nvList) {
 			norm = v.dNorm(winner);
-			dHat = new Party((v.getCiv()/norm),(v.getEcon()/norm),(v.getSoc()/norm));
+			if (norm == 0) {
+				dHat = new Party(0,0,0);
+			} else {
+				dHat = new Party((v.getCiv()/norm),(v.getEcon()/norm),(v.getSoc()/norm));
+			}
 			
 			if (Math.abs(v.getSatisf()) > 56) {
 				v.nudge(dHat);

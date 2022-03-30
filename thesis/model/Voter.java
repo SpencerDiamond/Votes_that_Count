@@ -121,36 +121,49 @@ public class Voter extends Citizen{
 		}//keeps values within the bounds of the coordinate system
 	}
 	
-	public ArrayList<Candidate> findPrefList(ArrayList<Candidate> cList) {
+	public ArrayList<Candidate> findPrefList(ArrayList<Candidate> cList, ArrayList<Party> pList) {
+		ArrayList<Party> npList = new ArrayList<>(pList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		ArrayList<Candidate> rList = new ArrayList<>();
 		
 		ncList.sort(new Comparator<Candidate>() {
 	        public int compare(Candidate o1, Candidate o2) {
-	        	double thisNorm = dNorm(o1);
-        		double thatNorm = dNorm(o2);
-        		double thisPNorm;
-        		double thatPNorm;
+	        	Voter virtVoter;
+	        	double thisNorm=0;
+        		double thatNorm=0;
+        		double thisPNorm=0;
+        		double thatPNorm=0;
+        		double thisCPNorm=0;
+        		double thatCPNorm=0;
+
+	        	thisNorm = dNorm(o1);
+        		thatNorm = dNorm(o2);
         		
         		if (getParty() != null) { //If Voter has a Party
 	        		thisPNorm = getParty().dNorm(o1);
 	        		thatPNorm = getParty().dNorm(o2);
-        		} else if (o1.getParty() == o2.getParty()) { //If Voter has no Party and both Candidates have the same Party
-        			thisPNorm = o1.getParty().dNorm(o1);
-        			thatPNorm = o2.getParty().dNorm(o2);
-        		} else { //If Voter has no Party and Candidates do not have the same Party
-        			thisPNorm = dNorm(o1.getParty());
-        			thatPNorm = dNorm(o2.getParty());
+        		} else {
+        			virtVoter = new Voter(getCiv(), getEcon(), getSoc(), (double) 400);
+	        		virtVoter.setParty(virtVoter.findParty(npList));
+        			thisPNorm = virtVoter.getParty().dNorm(o1);
+	        		thatPNorm = virtVoter.getParty().dNorm(o2);
         		}
+    			thisCPNorm = dNorm(o1.getParty());
+    			thatCPNorm = dNorm(o2.getParty());
         		
         		if (thisNorm > thatNorm) {
         			return 1;
-        		} else if (thisNorm == thatNorm) { //Voter is on the line of symmetry of the Candidates 
+        		} else if (thisNorm == thatNorm) {//Voter is on the line of symmetry of the Candidates 
         			if (thisPNorm > thatPNorm) {
         				return 1;
-        			} else if (thisPNorm == thatPNorm) { //Either the Party of the Voter/Candidates is also on the line of 
-        											//symmetry or the Candidates' Parties are also symmetrical about that line
-            			return 0;
+        			} else if (thisPNorm == thatPNorm) {//Party of the Voter is also on the line of symmetry of the Candidates
+        				if (thisCPNorm > thatCPNorm) {
+            				return 1;
+            			} else if (thisCPNorm == thatCPNorm) {//Voter is also on the line of symmetry of the Candidates' Parties
+                			return 0;
+            			} else {
+            				return -1;
+            			}
         			} else {
         				return -1;
         			}

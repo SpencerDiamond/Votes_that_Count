@@ -16,11 +16,17 @@ public abstract class PolEntity {//implements Comparable<PolEntity> { //politica
 		setSoc((r.nextFloat() * 200) - 100); //generates a random number in [-100, 100]
 	}
 	public PolEntity(double pCiv, double pEcon, double pSoc) {
+		if (Double.isNaN(pCiv) || Double.isNaN(pEcon) || Double.isNaN(pSoc) || Double.isInfinite(pCiv) || Double.isInfinite(pEcon) || Double.isInfinite(pSoc)) {
+			throw new ArithmeticException("PolEntity with NaN value");
+		}
 		setCiv(pCiv);
 		setEcon(pEcon);
 		setSoc(pSoc);
 	}
 	public PolEntity(PolEntity pe) {
+		if (Double.isNaN(pe.getCiv()) || Double.isNaN(pe.getEcon()) || Double.isNaN(pe.getSoc()) || Double.isInfinite(pe.getCiv()) || Double.isInfinite(pe.getEcon()) || Double.isInfinite(pe.getSoc())) {
+			throw new ArithmeticException("PolEntity with NaN value");
+		}
 		setCiv(pe.getCiv());
 		setEcon(pe.getEcon());
 		setSoc(pe.getSoc());

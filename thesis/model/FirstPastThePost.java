@@ -20,7 +20,7 @@ public class FirstPastThePost extends VotingSystem {
 		//int m=0;//ddddddddddddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
-			v.setPrefList(v.findPrefList(ncList));
+			v.setPrefList(v.findPrefList(ncList, npList));
 			if (!v.getPrefList().isEmpty()) {
 				c = v.getPrefList().get(0);
 				c.addVote();

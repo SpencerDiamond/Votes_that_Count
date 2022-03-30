@@ -52,7 +52,7 @@ public class Bucklin extends VotingSystem {
 		//System.out.println(getNumToBeat() +","+ getVoterList().size() +","+ getCandList().size());
 		//System.out.println("Level 1");
 		for (Voter v: nvList) {
-			v.setPrefList(v.findPrefList(ncList));
+			v.setPrefList(v.findPrefList(ncList, npList));
 			if (!v.getPrefList().isEmpty()) {
 				c = v.getPrefList().get(0);
 				c.addVote();
