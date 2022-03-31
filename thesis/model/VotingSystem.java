@@ -90,7 +90,7 @@ public abstract class VotingSystem implements VotingFunctions {
 	}
 
 	//election methods
-	public Candidate makeElection() {
+	public Candidate makeElection(boolean withPrimary) {
 		System.out.println(this);
 		for (Candidate c: getCandList()) {
 			 assignParty(c, getPartyList());
@@ -105,9 +105,13 @@ public abstract class VotingSystem implements VotingFunctions {
 		}
 		initFunding(getVoterList(), getPartyList());
 		
-		 giveVotes(getVoterList(), getCandList(), getPartyList());
-		 addWin(findWin(getVoterList(), getCandList(), true));
-		 findPerformance(getVoterList(), getWinList().get(getWinList().size() - 1));
+		if (withPrimary) {
+			makePrimary();
+		}
+		
+		giveVotes(getVoterList(), getCandList(), getPartyList(), false);
+		addWin(findWin(getVoterList(), getCandList(), true));
+		findPerformance(getVoterList(), getWinList().get(getWinList().size() - 1));
 		
 		return getWinList().get(getWinList().size() - 1);
 	}
@@ -116,9 +120,24 @@ public abstract class VotingSystem implements VotingFunctions {
 			//System.out.print(p);
 			p.distributeFunding();
 		}
-		 nudgeVoters(getVoterList(), getWinList().get(getWinList().size() - 1));
-		 dropParties();
-		 reset();
+		nudgeVoters(getVoterList(), getWinList().get(getWinList().size() - 1));
+		dropParties();
+		reset();
+	}
+	public ArrayList<Candidate> makePrimary() {
+		ArrayList<Candidate> nwList = new ArrayList<>();
+		
+		giveVotes(getVoterList(), getCandList(), getPartyList(), true);
+		
+		for (Party p: getPartyList()) {
+			if (!p.getCandList().isEmpty()) {
+				p.setFunding(getCandList().size() * 30);//ensure no candidates will be dropped
+				nwList.add(p.getCandList().get(0));
+			}
+		}
+		
+		reset();
+		return nwList;
 	}
 	
 	public void reset() {
@@ -211,10 +230,10 @@ public abstract class VotingSystem implements VotingFunctions {
 		}
 		if (ncList.size() > 2) {			
 			for (Voter tv: tvList) {
-				tv.setPrefList(tv.findPrefList(tcList, tpList));
+				tv.setPrefList(tv.findPrefList(tcList, tpList, false));
 			}
 			
-			giveVotes(tvList, tcList, tpList);
+			giveVotes(tvList, tcList, tpList, false);
 			
 			ncList.sort(new Comparator<Candidate>() {
 		        public int compare(Candidate o1, Candidate o2) {
@@ -242,7 +261,7 @@ public abstract class VotingSystem implements VotingFunctions {
 			aveSoc = aveSoc / nvList.size();
 			aveVoter = new Voter(aveCiv, aveEcon, aveSoc, 400);
 			
-			winner = aveVoter.findPrefList(tcList, tpList).get(0);
+			winner = aveVoter.findPrefList(tcList, tpList, false).get(0);
 			winner.addVote();
 			//System.out.println("Average Vote: "+ winner);
 		}
@@ -312,8 +331,8 @@ public abstract class VotingSystem implements VotingFunctions {
 	public void dropParties(){
 		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
 		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
-		ArrayList<Candidate> rcList = new ArrayList<>();
 		ArrayList<Party> npList = new ArrayList<>(getPartyList());
+		ArrayList<Candidate> rcList = new ArrayList<>();
 		ArrayList<Party> ipList = new ArrayList<>();
 		ArrayList<Party> rpList = new ArrayList<>();
 		int topFunding;

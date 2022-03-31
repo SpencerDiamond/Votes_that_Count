@@ -52,7 +52,7 @@ public class LaterNoHelpHarm extends FairnessMeasure {
 		}
 		nElection = newElection(election, peList);
 		nElection.reset();
-		nWinner = nElection.makeElection();
+		nWinner = nElection.makeElection(false);
 		
 		return nWinner;
 	}

@@ -121,7 +121,7 @@ public class Voter extends Citizen{
 		}//keeps values within the bounds of the coordinate system
 	}
 	
-	public ArrayList<Candidate> findPrefList(ArrayList<Candidate> cList, ArrayList<Party> pList) {
+	public ArrayList<Candidate> findPrefList(ArrayList<Candidate> cList, ArrayList<Party> pList, boolean partyExclusive) {
 		ArrayList<Party> npList = new ArrayList<>(pList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		ArrayList<Candidate> rList = new ArrayList<>();
@@ -174,7 +174,7 @@ public class Voter extends Citizen{
 	    });
 		
 		for (Candidate c: ncList) {
-			if (dNorm(c) > getAppRad()) {
+			if (dNorm(c) > getAppRad() || (partyExclusive && (getParty() != c.getParty()))) {
 				rList.add(c);
 			}
 		}

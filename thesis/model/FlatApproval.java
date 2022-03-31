@@ -11,7 +11,7 @@ public class FlatApproval extends VotingSystem {
 		super(vList, cList, pList);
 	}
 
-	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
+	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, boolean partyExclusive) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		ArrayList<Party> npList = new ArrayList<>(pList);
@@ -19,7 +19,7 @@ public class FlatApproval extends VotingSystem {
 		//int m=0;//ddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
-			v.setPrefList(v.findPrefList(ncList, npList));
+			v.setPrefList(v.findPrefList(ncList, npList, partyExclusive));
 			if (!v.getPrefList().isEmpty()) {
 				for (Candidate c: v.getPrefList()) {
 					c.addVote();
@@ -27,8 +27,10 @@ public class FlatApproval extends VotingSystem {
 				}
 			}
 		}
-		
-		giveFunding(nvList, npList);
+
+		if (!partyExclusive) {
+			giveFunding(nvList, npList);
+		}
 	}
 
 }

@@ -61,7 +61,7 @@ public class InstantRunoff extends VotingSystem {
 		return loser;
 	}
 	
-	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
+	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, boolean partyExclusive) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		ArrayList<Party> npList = new ArrayList<>(pList);
@@ -72,7 +72,7 @@ public class InstantRunoff extends VotingSystem {
 		//int m=0;//ddddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
-			v.setPrefList(v.findPrefList(ncList, npList));
+			v.setPrefList(v.findPrefList(ncList, npList, partyExclusive));
 			if (!v.getPrefList().isEmpty()) {
 				c = v.getPrefList().get(0);
 				c.addVote();
@@ -85,7 +85,9 @@ public class InstantRunoff extends VotingSystem {
 			}
 		}
 		
-		giveFunding(nvList, npList);
+		if (!partyExclusive) {
+			giveFunding(nvList, npList);
+		}
 		
 		while ((findWin(nvList, ncList, false).getVotes() < getNumToBeat()) && (ncList.size() > 1)) {
 			//m=0;//ddddddddddddddddddd

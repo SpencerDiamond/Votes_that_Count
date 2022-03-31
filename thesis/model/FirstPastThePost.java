@@ -11,7 +11,7 @@ public class FirstPastThePost extends VotingSystem {
 		super(vList, cList, pList);
 	}
 
-	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList) {
+	public void giveVotes(ArrayList<Voter> vList, ArrayList<Candidate> cList, ArrayList<Party> pList, boolean partyExclusive) {
 		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		ArrayList<Party> npList = new ArrayList<>(pList);
@@ -20,15 +20,17 @@ public class FirstPastThePost extends VotingSystem {
 		//int m=0;//ddddddddddddddddddddddddddddddd
 		
 		for (Voter v: nvList) {
-			v.setPrefList(v.findPrefList(ncList, npList));
+			v.setPrefList(v.findPrefList(ncList, npList, partyExclusive));
 			if (!v.getPrefList().isEmpty()) {
 				c = v.getPrefList().get(0);
 				c.addVote();
 				//System.out.println(++m +" "+ c);
 			}
 		}
-		
-		giveFunding(nvList, npList);
+
+		if (!partyExclusive) {
+			giveFunding(nvList, npList);
+		}
 	}
 
 }
