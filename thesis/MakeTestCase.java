@@ -17,7 +17,7 @@ public class MakeTestCase {
 		boolean cDupes=true;
 		boolean pDupes=true;
 		
-		for (int j=0; j<300; j++) {
+		for (int j=0; j<200; j++) {
 			vList.add(new Voter());
 		}
 		for (int j=0; j<30; j++) {
