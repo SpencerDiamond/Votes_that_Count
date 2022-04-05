@@ -91,7 +91,7 @@ public abstract class VotingSystem implements VotingFunctions {
 
 	//election methods
 	public Candidate makeElection(boolean withPrimary) {
-		System.out.println(this);
+		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
 		for (Candidate c: getCandList()) {
 			 assignParty(c, getPartyList());
 		}
@@ -106,11 +106,11 @@ public abstract class VotingSystem implements VotingFunctions {
 		initFunding(getVoterList(), getPartyList());
 		
 		if (withPrimary) {
-			makePrimary();
+			ncList = makePrimary();
 		}
 		
-		giveVotes(getVoterList(), getCandList(), getPartyList(), false);
-		addWin(findWin(getVoterList(), getCandList(), true));
+		giveVotes(getVoterList(), ncList, getPartyList(), false);
+		addWin(findWin(getVoterList(), ncList, true));
 		findPerformance(getVoterList(), getWinList().get(getWinList().size() - 1));
 		
 		return getWinList().get(getWinList().size() - 1);
@@ -149,18 +149,6 @@ public abstract class VotingSystem implements VotingFunctions {
 		}
 		for (Party p: getPartyList()) {
 			p.reset();
-		}
-	}
-	
-	//Assigns Citizens to Parties and makes candLists for the Parties
-	public void assignParty(Citizen cit, ArrayList<Party> pList){
-		ArrayList<Party> npList = new ArrayList<>(pList);
-		
-		if (cit.getParty() == null) {
-			cit.setParty(cit.findParty(npList));
-			if ((cit instanceof Candidate) && (!((Candidate) cit).getParty().getCandList().contains(cit))) {
-				cit.getParty().addCand((Candidate) cit);
-			}
 		}
 	}
 	
@@ -268,66 +256,18 @@ public abstract class VotingSystem implements VotingFunctions {
 		
 		return winner;
 	}
-	
-	public boolean giveFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
-		ArrayList<Voter> nvList = new ArrayList<>(vList);
-		ArrayList<Party> npList = new ArrayList<>(pList);
-		int ballots = 0;
-		int voterPercent = 0;
-		int countPercent = 0;
-		
-		if (nvList.isEmpty() || npList.isEmpty()) {
-			System.out.println("something wrong");
-			return false;//this uses the return keyword to end the method before divide by zero/indexing error can occur
-		}
-		
-		for (Party p: npList) {
-			p.reset();
-		}
 
-		for (Voter v: nvList) {
-			if (v.getParty() != null) {
-				v.getParty().addVoter();
-			}
-			if (!v.getPrefList().isEmpty()) {
-				v.getPrefList().get(0).getParty().addCount();
-				ballots++;
-			}
-		}
-		
-		for (Party p: npList) {
-			voterPercent = (int) ((((double) p.getVoterTotal()) / ballots) * 100);
-			countPercent = (int) ((((double) p.getCountTotal()) / ballots) * 100);
-			p.setFunding(voterPercent + (countPercent * 5));
-		}
-		
-		return true;//returned number is not used, only here for error prevention
-	}
-	public void initFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
-		ArrayList<Voter> nvList = new ArrayList<>(vList);
+	//Assigns Citizens to Parties and makes candLists for the Parties
+	public void assignParty(Citizen cit, ArrayList<Party> pList){
 		ArrayList<Party> npList = new ArrayList<>(pList);
-		int voterPercent = 0;
 		
-		if (nvList.isEmpty() || npList.isEmpty()) {
-				throw new ArithmeticException("Empty List");
-		}
-		
-		for (Party p: npList) {
-			p.reset();
-		}
-
-		for (Voter v: nvList) {
-			if (v.getParty() != null) {
-				v.getParty().addVoter();
+		if (cit.getParty() == null) {
+			cit.setParty(cit.findParty(npList));
+			if ((cit instanceof Candidate) && (!((Candidate) cit).getParty().getCandList().contains(cit))) {
+				cit.getParty().addCand((Candidate) cit);
 			}
-		}
-		
-		for (Party p: npList) {
-			voterPercent = (int) ((((double) p.getVoterTotal()) / nvList.size()) * 100);
-			p.setFunding(voterPercent);
 		}
 	}
-	
 	public void dropParties(){
 		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
 		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
@@ -391,6 +331,61 @@ public abstract class VotingSystem implements VotingFunctions {
 		setVoterList(nvList);
 		setCandList(ncList);
 		setPartyList(npList);
+	}
+	public void giveFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
+		ArrayList<Voter> nvList = new ArrayList<>(vList);
+		ArrayList<Party> npList = new ArrayList<>(pList);
+		int ballots = 0;
+		int voterPercent = 0;
+		int countPercent = 0;
+		
+		if (nvList.isEmpty() || npList.isEmpty()) {
+			throw new ArithmeticException("Empty List");
+		}
+		
+		for (Party p: npList) {
+			p.reset();
+		}
+
+		for (Voter v: nvList) {
+			if (v.getParty() != null) {
+				v.getParty().addVoter();
+			}
+			if (!v.getPrefList().isEmpty()) {
+				v.getPrefList().get(0).getParty().addCount();
+				ballots++;
+			}
+		}
+		
+		for (Party p: npList) {
+			voterPercent = (int) ((((double) p.getVoterTotal()) / ballots) * 100);
+			countPercent = (int) ((((double) p.getCountTotal()) / ballots) * 100);
+			p.setFunding(voterPercent + (countPercent * 5));
+		}
+	}
+	public void initFunding(ArrayList<Voter> vList, ArrayList<Party> pList) {
+		ArrayList<Voter> nvList = new ArrayList<>(vList);
+		ArrayList<Party> npList = new ArrayList<>(pList);
+		int voterPercent = 0;
+		
+		if (nvList.isEmpty() || npList.isEmpty()) {
+				throw new ArithmeticException("Empty List");
+		}
+		
+		for (Party p: npList) {
+			p.reset();
+		}
+
+		for (Voter v: nvList) {
+			if (v.getParty() != null) {
+				v.getParty().addVoter();
+			}
+		}
+		
+		for (Party p: npList) {
+			voterPercent = (int) ((((double) p.getVoterTotal()) / nvList.size()) * 100);
+			p.setFunding(voterPercent);
+		}
 	}
 	
 	//nudging methods

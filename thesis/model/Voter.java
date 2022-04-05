@@ -91,7 +91,7 @@ public class Voter extends Citizen{
 	//print method
 	@Override
 	public String toString() {
-		return "Voter: " + super.toString() +","+ getAppRad() +","+ getSatisf();// +" - "+ getParty();
+		return "Voter: " + super.toString() +","+ getAppRad() +","+ getSatisf();
 	}
 	
 	public void reset() {

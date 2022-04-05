@@ -10,29 +10,56 @@ public class CondTest extends FairnessMeasure {
 	}
 
 	public boolean makeMeasure() {
-		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
-		ArrayList<Candidate> nwList = new ArrayList<>();
+		ArrayList<Candidate> pwList = new ArrayList<>();
 		Candidate winner = getWinList().get(getWinList().size() - 1);
+		boolean pass;
+		
+		pwList = getPWWinners(winner);
+		pass = checkPWWinner(winner, pwList);
+
+		if (pass) {
+			System.out.println("Condorcet Test has been passed!");
+		} else {
+			System.out.println("Condorcet Test has been failed.");
+		}
+		return pass;
+	}
+	
+	public ArrayList<Candidate> getPWWinners(Candidate pCand){
+		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
+		ArrayList<Candidate> wList = new ArrayList<>();
 		Candidate pwWinner;
-		boolean pass=true;
 		
 		for (Candidate c: ncList) {
-			if (c.dNorm(winner) > 0) {
-				pwWinner = pairwiseWinner(winner, c);
-				nwList.add(pwWinner);
-				System.out.println("Pairwise winner of "+ winner +" and "+ c +" is "+ pwWinner);
+			if (c.dNorm(pCand) > 0) {
+				pwWinner = pairwiseWinner(pCand, c);
+				wList.add(pwWinner);
+				//System.out.println("Pairwise winner of "+ winner +" and "+ c +" is "+ pwWinner);
 			}
 		}
 		
+		return wList;
+	}
+	public boolean checkPWWinner(Candidate pWinner, ArrayList<Candidate> wList) {
+		ArrayList<Candidate> nwList = new ArrayList<>(wList);
+		ArrayList<Candidate> npwList = new ArrayList<>();
+		boolean nPass=false;
+		boolean pass=true;
+		
 		for (Candidate w: nwList) {
-			if (!w.equals(winner)) {
+			if (!w.equals(pWinner)) {
+				//System.out.println(w);
+				npwList = getPWWinners(w);
+				nPass = (checkPWWinner(w, npwList));
+			}
+			if (nPass) {
+				//System.out.println("fail "+ w);
 				pass = false;
 			}
 		}
 		
 		return pass;
 	}
-	
 	public Candidate pairwiseWinner(Candidate pWinner, Candidate pCand) {
 		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
 		Candidate nWinner = new Candidate(pWinner);

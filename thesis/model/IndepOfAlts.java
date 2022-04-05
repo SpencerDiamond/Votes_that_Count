@@ -18,7 +18,7 @@ public class IndepOfAlts extends FairnessMeasure {
 		boolean pass=true;
 		
 		clone = new Candidate((getWinList().get(getWinList().size() - 1).getCiv() - 0.01), (getWinList().get(getWinList().size() - 1).getEcon() - 0.01), (getWinList().get(getWinList().size() - 1).getSoc() - 0.01), getWinList().get(getWinList().size() - 1).getParty());//clone of winner. not an exact clone to avoid redundant ties, but very, very close
-		loser = findLoser.findLoser(getCandList());
+		loser = findLoser.findLoser(getVoterList(), getCandList());
 		irrelAlt = new Candidate((loser.getCiv() - 0.01), (loser.getEcon() - 0.01), (loser.getSoc() - 0.01), loser.getParty());//clone of loser. not an exact clone to avoid redundant ties, but very, very close
 		
 		nwList.add(checkWinner(getVotingSystem(), clone));
@@ -28,13 +28,20 @@ public class IndepOfAlts extends FairnessMeasure {
 		for (Candidate win: nwList) {
 			if (win.dNorm(getWinList().get(getWinList().size() - 1)) != 0) {
 				pass = false;
+//				if (nwList.indexOf(win) == 0) {
+//					System.out.println("clone");
+//				} else if (nwList.indexOf(win) == 1) {
+//					System.out.println("loser");
+//				} else {
+//					System.out.println("irrel");
+//				}
 			}
 		}
 		
 		if (pass) {
-			System.out.println("Independence of Alternatives been passed!");
+			System.out.println("Independence of Alternatives has been passed!");
 		} else {
-			System.out.println("Independence of Alternatives been failed.");
+			System.out.println("Independence of Alternatives has been failed.");
 		}
 		return pass;
 	}

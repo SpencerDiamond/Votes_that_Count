@@ -40,9 +40,17 @@ public class InstantRunoff extends VotingSystem {
 		setNumToBeat((getVoterList().size()/2) + 1);
 	}
 	
-	public Candidate findLoser(ArrayList<Candidate> cList) {
+	public Candidate findLoser(ArrayList<Voter> vList, ArrayList<Candidate> cList) {
+		ArrayList<Voter> nvList = new ArrayList<>(vList);
 		ArrayList<Candidate> ncList = new ArrayList<>(cList);
+		ArrayList<Party> tpList = new ArrayList<>();
+		ArrayList<Candidate> tcList = new ArrayList<>();
 		Candidate loser = null;
+		Voter aveVoter = null;
+		double aveCiv = 0;
+		double aveEcon = 0;
+		double aveSoc = 0;
+		int tieVotes;
 		
 		ncList.sort(new Comparator<Candidate>() {
 	        public int compare(Candidate o1, Candidate o2) {
@@ -57,6 +65,30 @@ public class InstantRunoff extends VotingSystem {
 	    });
 		
 		loser = ncList.get(0);
+		
+		if (ncList.get(0).getVotes() == ncList.get(1).getVotes()) {//if there is a tie 
+			tieVotes = ncList.get(0).getVotes();
+			for (Candidate c: ncList) {
+				if (c.getVotes() == tieVotes) {
+					c.reset();
+					tcList.add(c);
+					tpList.add(c.getParty());
+				}
+			}
+			
+			for (Voter v: nvList) {
+				aveCiv += v.getCiv();
+				aveEcon += v.getEcon();
+				aveSoc += v.getSoc();
+			}
+			aveCiv = aveCiv / nvList.size();
+			aveEcon = aveEcon / nvList.size();
+			aveSoc = aveSoc / nvList.size();
+			aveVoter = new Voter(aveCiv, aveEcon, aveSoc, 400);
+			
+			aveVoter.setPrefList(aveVoter.findPrefList(tcList, tpList, false));
+			loser = aveVoter.getPrefList().get(aveVoter.getPrefList().size() - 1);
+		}
 		
 		return loser;
 	}
@@ -91,8 +123,8 @@ public class InstantRunoff extends VotingSystem {
 		
 		while ((findWin(nvList, ncList, false).getVotes() < getNumToBeat()) && (ncList.size() > 1)) {
 			//m=0;//ddddddddddddddddddd
-			r = findLoser(ncList);
-			//System.out.println("Removing "+ r);
+			r = findLoser(nvList, ncList);
+			//System.out.println("Removing "+ getCandList().indexOf(r));
 			ncList.remove(r);
 			for (Voter v: nvList) {
 				if (v.getPrefList().contains(r)) {
@@ -100,12 +132,21 @@ public class InstantRunoff extends VotingSystem {
 						if (v.getPrefList().size() > 1) {
 							c = v.getPrefList().get(1);
 							c.addVote();
+//							System.out.print(v);
+//							for (Candidate p: v.getPrefList()) {
+//								System.out.print("  "+ getCandList().indexOf(p));
+//							}
+//							System.out.println("");
 							//System.out.println(++m +" "+ c);
 						}
 					}
 					v.getPrefList().remove(r);
 				}
 			}
+//			for (Candidate nc: ncList) {
+//				System.out.println(getCandList().indexOf(nc) +": "+ nc.getVotes());
+//			}
+//			System.out.println("");
 		}
 	}
 

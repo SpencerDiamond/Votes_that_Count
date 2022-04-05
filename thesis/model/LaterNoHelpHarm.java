@@ -14,23 +14,24 @@ public class LaterNoHelpHarm extends FairnessMeasure {
 		boolean pass=true;
 		
 		for (Candidate cand: getCandList()) {
-			nwList.add(checkWinner(getVotingSystem(), cand));
+			nwList.add(checkWide(getVotingSystem(), cand));
 		}
 		for (Candidate win: nwList) {
 			if (win.dNorm(getWinList().get(getWinList().size() - 1)) != 0) {
 				pass = false;
+				System.out.println(nwList.indexOf(win) +"  ,  "+ win);
 			}
 		}
 		
 		if (pass) {
-			System.out.println("Later No Help/Harm been passed!");
+			System.out.println("Later No Help/Harm has been passed!");
 		} else {
-			System.out.println("Later No Help/Harm been failed.");
+			System.out.println("Later No Help/Harm has been failed.");
 		}
 		return pass;
 	}
 	
-	public Candidate checkWinner(VotingSystem election, Candidate pCand) {
+	public Candidate checkWide(VotingSystem election, Candidate pCand) {
 		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
 		ArrayList<PolEntity> peList = new ArrayList<>();
 		Candidate nWinner=null;
@@ -56,5 +57,34 @@ public class LaterNoHelpHarm extends FairnessMeasure {
 		
 		return nWinner;
 	}
-
+	public Candidate checkNarrow(VotingSystem election, Candidate pCand) {//currently unused
+		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
+		ArrayList<PolEntity> peList = new ArrayList<>();
+		Candidate nWinner=null;
+		VotingSystem nElection;
+		Voter nVoter;
+		
+		for (Voter v: nvList) {
+			if (!v.getPrefList().isEmpty()) {
+				if (v.getPrefList().get(0).equals(pCand)) {
+					if (v.getPrefList().size() > 1) {
+						nVoter = new Voter(v);
+						nVoter.getPrefList().remove(v.getPrefList().get(v.getPrefList().size() - 1));
+						peList.add(nVoter);					
+					} else {
+						peList.add(v);
+					}
+				} else {
+					peList.add(v);
+				}
+			} else {
+				peList.add(v);
+			}
+		}
+		nElection = newElection(election, peList);
+		nElection.reset();
+		nWinner = nElection.makeElection(false);
+		
+		return nWinner;
+	}
 }

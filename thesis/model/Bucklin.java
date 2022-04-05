@@ -63,7 +63,7 @@ public class Bucklin extends VotingSystem {
 			} else {
 				e = true;
 			}
-		}
+		}		
 		
 		if (!partyExclusive) {
 			giveFunding(nvList, npList);
