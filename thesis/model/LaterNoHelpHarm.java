@@ -19,7 +19,7 @@ public class LaterNoHelpHarm extends FairnessMeasure {
 		for (Candidate win: nwList) {
 			if (win.dNorm(getWinList().get(getWinList().size() - 1)) != 0) {
 				pass = false;
-				System.out.println(nwList.indexOf(win) +"  ,  "+ win);
+				//System.out.println(nwList.indexOf(win) +"  ,  "+ win);
 			}
 		}
 		
