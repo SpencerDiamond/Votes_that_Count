@@ -171,7 +171,7 @@ public class Voter extends Citizen{
         			return -1;
         		}
 	        }
-	    });
+		});
 		
 		for (Candidate c: ncList) {
 			if (dNorm(c) > getAppRad() || (partyExclusive && (getParty() != c.getParty()))) {
