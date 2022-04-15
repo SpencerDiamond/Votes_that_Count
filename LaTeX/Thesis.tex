@@ -112,7 +112,7 @@ Barrett Honors College\\
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
 \qquad The actual model used in this tool is based on an extension of a system that some may already be familiar with, often called the ``Political Compass.'' This system is based on the juxtaposition of conflicting political positions. It takes the concepts of `Authoritarianism' and `Libertarianism,' and places them at opposite ends of a coordinate axis. Similarly, it takes the fuzzy concepts of political `Left' and `Right,' and places them at opposite ends of another coordinate axis. These two axis are arranged perpendicular to each other, effectively allowing a person's political ideals to be represented as a point in 2D Cartesian coordinates.\footnote{For a contemporary example of this kind of system see politicalcompass.org; for a more historical example see \cite{brysonmcdill}} This popular conception of a political compass has a few problems. Firstly, the terms Authoritarianism, Libertarianism, Left, and Right are ill-defined and cause a good amount of confusion. For Authoritarianism and Libertarianism, almost all of the confusion can be removed by a simple relabeling. In this model, these terms are replaced with `Hierarchical' and `Individualist,' and the axis they lie on is called the `Civil Axis.' For Left and Right, the problem stems from the fact that there are two different political concepts described with these terms; either someone's economic ideals or their social ideals can be given these labels, and without specifying which is being talked about this introduces alot of ambiguity. To remedy this issue, this model extended this system into the third dimension by splitting this axis in two, with a new `Economic Axis' labeled with `Socialism' and `Capitalism,' and the new `Social Axis' retaining the `Left' and `Right' labels. To avoid confusion going forward, I will only use the terms Left and Right in their social sense. \\
 
-\qquad In this model, the basic object is called a Political Entity.\footnotett{For clarity, model objects are always capitalized. For example, `voter' refers to the colloquial, real world concept of a person who votes, while `Voter' refers to a Voter object in the model} In general, a Political Entity is just something that can have a concrete position in the coordinate system we have constructed. Because we have a 3D Cartesian coordinate system, we can easily represent a Political Entity as a 3D vector with Civil, Social, and Economic components. Less familiar readers my be more comfortable thinking of Political Entities simply as points on a grid, but using a vector representation has many advantages over a point representation.\footnote{Additional explanations of what vectors are, how they work, and what these advantages are can be found in \S \ref{Glossary}, \S \ref{SimulationDetails}, and \S \ref{Limitations} if needed} By representing them as vectors, it is easy to find the relative distance between two Political Entities by finding the magnitude of the difference of the vectors. This relative distance, which I will be calling the `norm' of two Political Entities, is the principle measure for most interactions in the model. Nearly all Political Entities used in a specific simulation will be generated beforehand and fed in as the initial conditions. However, there are many circumstances where the model will need to add a Political Entity to the simulation. In these cases, that added Political Entity is called a `virtual' Political Entity. The term `virtual' may be a bit confusing, so just think of it as the opposite of `actual.' It just means that this object is a fictitious book keeping device. Virtual Political Entities are either removed from the simulation as soon as their function is served, or they can be `persistent,' only being removed at the conclusion of a simulation. Virtual Political Entities are never carried over to a separate simulation. \\
+\qquad In this model, the basic object is called a Political Entity.\footnotett{For clarity, model objects are always capitalized. For example, `voter' refers to the colloquial, real world concept of a person who votes, while `Voter' refers to a Voter object in the model} In general, a Political Entity is just something that can have a concrete position in the coordinate system we have constructed. Because we have a 3D Cartesian coordinate system, we can easily represent a Political Entity as a 3D vector with Civil, Social, and Economic components. Less familiar readers my be more comfortable thinking of Political Entities simply as points on a grid, but using a vector representation has many advantages over a point representation.\footnote{Additional explanations of what vectors are, how they work, and what these advantages are can be found in \S \ref{SimulationDetails} and \S \ref{Limitations} if needed} By representing them as vectors, it is easy to find the relative distance between two Political Entities by finding the magnitude of the difference of the vectors. This relative distance, which I will be calling the `norm' of two Political Entities, is the principle measure for most interactions in the model. Nearly all Political Entities used in a specific simulation will be generated beforehand and fed in as the initial conditions. However, there are many circumstances where the model will need to add a Political Entity to the simulation. In these cases, that added Political Entity is called a `virtual' Political Entity. The term `virtual' may be a bit confusing, so just think of it as the opposite of `actual.' It just means that this object is a fictitious book keeping device. Virtual Political Entities are either removed from the simulation as soon as their function is served, or they can be `persistent,' only being removed at the conclusion of a simulation. Virtual Political Entities are never carried over to a separate simulation. \\
 
 \qquad There are two different kinds of Political Entities: Citizens and Parties. Citizens are Political Entities that directly interact with elections. There are two types: Voters and Candidates. Voters are, predictably, Citizens that vote in elections. For a Voter, their specific placement in the coordinate system represents voting preferences. Candidates are Citizens that can be voted for, and their position represents their platform. The norm between a Voter and Candidate represents that Voter's relative preference for that Candidate, so that the Candidate closest to a Voter would be that Voter's first choice in an election. Voters also have an Approval Radius, and will only consider Candidates within that radius. By comparing the norm of each Voter with each Candidate, we construct a Preference List for each Voter. This Preference List is a list of all the Candidates who's norm with the Voter is less than the Voter's Approval Radius, and the list is ordered by norm with the Voter. This list facilitates the giving of votes to Candidates. It is important to note that Candidates are not Voters, so they \textit{do not} vote in the elections. This is done to reduce the complexity of the code, and the ratio of Voters to Candidates is bounded so that this simplification is very likely to be negligible. In very close races, virtual Voters in the same position as each Candidate can be used to resolve ambiguity. \\
 
@@ -152,10 +152,10 @@ Barrett Honors College\\
 \section{Simulation Details} \label{SimulationDetails}
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
-\qquad The specific process by which some of the model's systems work contains many complications that would be beneficial to explore more in depth. A casual user may skip these details, but it can be informative to understand the model's inner workings on a more fundamental level. Firstly, details about the coordinate system. Each axis of the coordinate system, Economic, Civil, and Social, ranges from -100 to 100, with a value of 0 corresponding to the center of the axis.\footnotett{It is important to note that, out of necessity, one of the political ideals on each axis is treated as the negative side of the axis. This is not done disparagingly and does not correspond to the opinions of anyone involved with this project. The side of the axis that is treated as negative was decided by coin-flip} This way, the position of a Political Entity can be expressed as a vector $\bm{P} = \civ P_{\hbox{c}} + \econ P_{\hbox{e}} + \soc P_{\hbox{s}}$ with its base at the origin; where $\civ$, $\econ$, and $\soc$ are the unit vectors in the positive civil, economic, and social directions, respectively, and $P_{\hbox{c}}, P_{\hbox{e}}, \tand P_{\hbox{s}}$ are, respectively, the civil, economic, and social components of $\bm{P}$ (some readers my find it more intuitive to think of each Political Entity as a set of coordinates $\left<P_{\hbox{c}},P_{\hbox{e}},P_{\hbox{s}}\right>$. That notation is equivalent to the notation used in the rest of this document, however in order to maintain a conceptual distinction between vectors and points, component notation is preferred\footnote{See \S \ref{Glossary}}). For example, a Political Entity that is slightly Individualist, moderately Socialist, and extremely far Left socially would look something like $\bm{A} = -12\civ + 59\econ - 97\soc$ and could be represented as the vector shown below in Figure \ref{exVector}.
+\qquad The specific process by which some of the model's systems work contains many complications that would be beneficial to explore more in depth. A casual user may skip these details, but it can be informative to understand the model's inner workings on a more fundamental level. Firstly, details about the coordinate system. Each axis of the coordinate system, Economic, Civil, and Social, ranges from -100 to 100, with a value of 0 corresponding to the center of the axis. On the Civil Axis, the Hierarchical scale goes from 0 to 100, with the Individualist scaling from -100 to 0. On the Economic Axis, the Capitalist scale goes from -100 to 0 and the Socialist scale goes from 0 to 100. Lastly, on the Social Axis the Left goes from -100 to 0 and the Right goes from 0 to 100. \footnotett{It is important to note that, out of necessity, one of the political ideals on each axis is treated as the negative side of the axis. This is not done disparagingly and does not correspond to the opinions of anyone involved with this project. The side of the axis that is treated as negative was decided by coin-flip} This way, the position of a Political Entity can be expressed as a vector $\bm{P} = \civ P_{\hbox{c}} + \econ P_{\hbox{e}} + \soc P_{\hbox{s}}$ with its base at the origin; where $\civ$, $\econ$, and $\soc$ are the unit vectors in the positive civil, economic, and social directions, respectively, and $P_{\hbox{c}}, P_{\hbox{e}}, \tand P_{\hbox{s}}$ are, respectively, the civil, economic, and social components of $\bm{P}$ (some readers my find it more intuitive to think of each Political Entity as a set of coordinates $\left<P_{\hbox{c}},P_{\hbox{e}},P_{\hbox{s}}\right>$. That notation is equivalent to the notation used in the rest of this document, however in order to maintain a conceptual distinction between vectors and points, component notation is preferred). For example, a Political Entity that is slightly Individualist, moderately Socialist, and extremely far Left socially would look something like $\bm{A} = -12\civ + 59\econ - 97\soc$ and could be represented as the vector shown below in Figure \ref{exVector}.
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.4\textwidth]{placeholder01}
+\includegraphics[width=0.6\textwidth]{vectorA}
 \caption{\footnotesize An example of a Political Entity represented as a vector}
 \label{exVector}
 \end{figure}
@@ -163,7 +163,7 @@ Barrett Honors College\\
 \qquad If we add another Political Entity $\bm{B} = 24\civ - 9\econ - 38\soc$ we can now find the norm between them by first finding the deference vector $\bm{B} - \bm{A} = (24 - (- 12))\civ + (-9 - 59)\econ + (-38 - (- 97))\soc = 36\civ - 68\econ + 59\soc$. Then, it is possible to find the magnitude (length) of a vector by finding the square root of the sum of the squares of the components of the vector. So $|\bm{B} - \bm{A}| = \sqrt{36^2 + (-68)^2 + 59^2} = 96.96$. So the norm of $\bm{A} \tand \bm{B}$ is 96.96 (you'll notice in Figure \ref{exNorm} that this is very similar to the Pythagorean Theorem). This norm between two Political Entities is used in almost all interactions that take place in the model. For example, when the Preference List for each Voter is being determined, the Candidates are sorted in order of their norm with the Voter, with the shortest norm first. Then, any Candidates whose norm with the Voter is larger that the Voter's Approval Radius is removed from the list. This leaves each Voter with a list of the Candidates inside their Approval Radius, in order of how close they are.
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.4\textwidth]{placeholder02}
+\includegraphics[width=0.6\textwidth]{vectorABC}
 \caption{\footnotesize An example of the difference vector used to find the norm between two Political Entities}
 \label{exNorm}
 \end{figure}
@@ -181,15 +181,15 @@ Barrett Honors College\\
 \qquad After Satisfaction values have been determined, Voters are nudged. The nudging process also uses the norm, but in a very different way from the rest of the model, and a full explanation requires further discussion of vectors and their properties. A vector can be thought of as having two fundamental properties: a direction and a magnitude. There is a special kind of vector that has a magnitude of exactly 1, called a "unit vector." Because a unit vector has a magnitude of 1, there is a sense in which they are purely directional. By dividing any vector by its own magnitude, we can create a unit vector that has the direction of the original vector, so by dividing the difference vector between two Political Entities by their norm (so long as their norm is not equal to zero), can get the unit in the direction from one Political Entity directly to the other; we'll label this unit difference vector as $\vhat{d}$. By doing this for every Voter with the winner, we get the direction from each Voter directly to the winner, as seen in Figure \ref{exUnitVectors} (if the norm is zero, we avoid dividing by zero by simply setting $\vhat{d} = 0\civ + 0\econ + 0\soc$).
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.4\textwidth]{placeholder03}
-\caption{\footnotesize The collection of unit vectors pointing from each Voter to the winning Candidate}
+\includegraphics[width=0.6\textwidth]{dhatnudge}
+\caption{\footnotesize The unit vector pointing from a Voter to the winning Candidate}
 \label{exUnitVectors}
 \end{figure}
 
 \qquad For the actual nudging, Voters with a Satisfaction value above 56 or below -56 (i.e. in the top/bottom third of possible values within one standard deviation on both distributions) are moved in the direction of $\vhat{d}$ an amount equal to 25\% of the Voter's Satisfaction value. Since Voters with low satisfaction have negative Satisfaction values and vise-versa for high satisfaction, this will cause highly satisfied Voters to be nudged toward the winner (an example of this can be seen in Figure \ref{exNudge}), highly dissatisfied Voters to be nudged away from the winner, and neutral Voters to stay put. If a Voter would be nudged past a value of -100 or 100 (i.e. past the bounds of the coordinate system), they are instead nudged just to the edge. For example, say a Voter that has Civil component with absolute value $\left|C\right| \le 100$ would be nudged to have a new Civil component with absolute value $\left|C^\star\right| > 100$. That Voter would instead be nudged to $100 \times \frac{C^\star}{\left|C^\star\right|}$. This way, if $C^\star$ is less than -100, $\frac{C^\star}{\left|C^\star\right|} = -1$ so the new value of $C$ will be -100; and if $C^\star > 100$, then $\frac{C^\star}{\left|C^\star\right|} = 1$ so the new value of $C$ will be 100. This method is used for each axis to make sure all Political Entities say within the boundaries of the coordinate system.
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.4\textwidth]{placeholder04}
+\includegraphics[width=0.6\textwidth]{nudged}
 \caption{\footnotesize An example of a Voter being nudged toward the winner}
 \label{exNudge}
 \end{figure}
@@ -216,8 +216,8 @@ Barrett Honors College\\
 \qquad The other kind of tie that is encountered is a 'vote-level tie.' This occurs whenever a Voter cannot distinguish their preference between two candidates; they are exactly as preferable as each other. For our model this happens whenever more than one Candidate is exactly the same distance from a specific Voter. In a real election, this would not be an issue, the voter would simply choose one to rank higher arbitrarily. However, for our model there is no way to simulate this arbitrary choice in a way that is both unbiased \textit{and} deterministic. Recall that while the overall model is lightly stochastic, we require that every individual election be fully determined by its initial conditions. We could randomly assign one Candidate to be ranked higher, sacrificing the election's determinism; or we could axiomatically designate some other factor to by the decider, biasing the simulation towards that factor. In order to solve this problem, we must again temporarily abandon one of our assumptions, this time the assumption that a Voter's voting preference is decided only by their norm with a Candidate. Looking again to the real world, an individual voter very often associates much more strongly with a Party than any particular candidate (ANES). Taking advantage of this, in the case of a vote-level tie, we can compare the two Candidates' norms to the Voter's Party. If the Voter does not have a Party, we can use a virtual Voter in the same position with an Approval Radius of 400 to find the Party that is closest to the Voter and compare the Candidates' norms to that Party. This is enough to resolve almost all ambiguities, however it is still possible for the tie to persist in this situation if the Candidates are both the same distance from the Voter's Party. At this point we can turn to the Candidate's Parties, and compare their norms with the Voter. But, even that is not enough though, as with the correct symmetries (illustrated in Figure \ref{tieSymmetry}) this can still result in a vote-level tie. Under normal circumstances, the likelihood of this situation occurring is miniscule, however, because there are curtain vote-level ties that this model cannot resolve, we are simply forced to limit the allowed states of the system to exclude these situations.
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.4\textwidth]{placeholder05}
-\caption{\footnotesize The symmetry needed for an indisambiguable vote-level tie}
+\includegraphics[width=0.6\textwidth]{vectorGcircleline}
+\caption{\footnotesize The symmetry needed for an indisambiguable vote-level tie (Voter is green, circle shows dNorm with red and blue Candidates, purple line shows where the Party can be positioned to cause the catastrophic tie)}
 \label{tieSymmetry}
 \end{figure}
 
@@ -229,11 +229,63 @@ Barrett Honors College\\
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
+\qquad A set of example experiments using the tool have been generated to be used as a reference. This section will not show program output, because the output is currently still in development. Instead, the results of the elections are presented as charts. These examples all used the same pool of 200 Voters and 5 Candidates. For simplicity, it was assumed that every Candidate had a different Party, so to accomplish this only one Party was generated, and it was far off the coordinates system so that no Citizens would align with it, instead the only Parties were the Independent Parties tied to each Candidate. To improve the clarity and demonstrative value, the pool of Voters was manually curated so that none abstained from voting completely. One sample election of each type was run using these initial conditions.\\
 
+For First Past the Post, Candidate B earned the most votes and is elected as the winner.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Firstchart}
+\end{figure}
 
+For Approval, Candidate E earned the most votes, so the winner is different. Here is one of the clearest examples of a how changing voting system can improve our democracy. Instead of the winner representing less than half of the Voters, the winner of this election was voted for by over 75\% of voters. As you will see in the following examples, First Past the Post, the most commonly used voting system in real elections, (usually) produces the least representative winners.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Appchart}
+\end{figure}
 
+\qquad Since First Past the Post is only first choice votes, the first stages of the two ranked choice systems are exactly the same as the First Past the Post election. In our case, no Candidate has received more than 100 votes (100 being 50\% the number of ballots cast) so we move on to step two.\\
+
+For Bucklin, we add second choice votes to each Candidate's total. Below, those second choice votes are color coded based on that Voter's first choice. After adding second choice votes, both Candidate B and Candidate E have more that 100 votes, but Candidate E has the most, so they are the winner.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Buckover}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Buckchart}
+\end{figure}
+
+For Instant Runoff, Candidate D had the least votes, so they are removed and those votes go to the second choices. After adding those votes, all Candidates still have less than 100 votes. Candidate C now has the lowest number of votes, so they are removed and the votes are given to the next choices. Now Candidate E has the fewest votes, so those votes are given to next choices. After adding these votes, Candidate B now has more that 100 votes, so they are the winner. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Altover1}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Altchart1}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Altover2}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Altchart2}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Altover3}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Altchart3}
+\end{figure}
+
+\qquad One of each kind of Fairness Measure was run for each election. First Past the Post was the only to fail the Representation Score, but this is slightly misleading. Normally, if enough Voters abstain or do not specify enough later preferences, all of these Voting Systems can fail this criterion; in these examples the Voter pool was curated to maximum turnout, which inflated the Representation Score. For the Condorcet Test, First Past the Post had all Candidates in the Smith set, and Instant Runoff had A, B, and E in the Smith set so they passed. Approval and Bucklin Voting both elected Candidate E, but E lost to B pairwise, so they failed. For Independence of Alternatives, Bucklin Voting passed, but all the rest failed to a clone of the winner. For Later no Help/Harm, First Past the Post and Instant Runoff passed, with Approval and Bucklin both failing since E Voters specifying more later preferences caused Candidate B to win.
 
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -242,58 +294,101 @@ Barrett Honors College\\
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
-
-
-
-
-
-
-%0000000000000000000000000000000000000000000000000000000000000000000000000000000000
-%0000000000000000000000000000000000000000000000000000000000000000000000000000000000
-\newpage
-\section{Appendix B: Enlarged Figures} \label{AppB}
-%0000000000000000000000000000000000000000000000000000000000000000000000000000000000
-%0000000000000000000000000000000000000000000000000000000000000000000000000000000000
-\setcounter{figure}{0}
-
+\begin{centering}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.2\textwidth, angle=90]{SimpleUML}
+\end{figure}
+\footnotesize Simple version of the full UML Diagram
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{placeholder01}
-\caption{\footnotesize An example of a Political Entity represented as a vector}
+\includegraphics[width=1.3\textwidth, angle=90]{DetailedUML}
+\end{figure}
+Detailed version of the full UML Diagram (zooming in may be helpful
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{PolEntity}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{placeholder02}
-\caption{\footnotesize An example of the difference vector used to find the norm between two Political Entities}
+\includegraphics[width=0.7\textwidth]{Citizen}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{placeholder03}
-\caption{\footnotesize The collection of unit vectors pointing from each Voter to the winning Candidate}
+\includegraphics[width=0.7\textwidth]{Party}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{placeholder04}
-\caption{\footnotesize An example of a Voter being nudged toward the winner}
+\includegraphics[width=0.7\textwidth]{Voter}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{placeholder05}
-\caption{\footnotesize The symmetry needed for an indisambiguable vote-level tie}
+\includegraphics[width=0.7\textwidth]{Candidate}
 \end{figure}
 
-%0000000000000000000000000000000000000000000000000000000000000000000000000000000000
-%0000000000000000000000000000000000000000000000000000000000000000000000000000000000
-\newpage
-\section{Glossary} \label{Glossary}
-%0000000000000000000000000000000000000000000000000000000000000000000000000000000000
-%0000000000000000000000000000000000000000000000000000000000000000000000000000000000
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{VotingSystem}
+\end{figure}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{VotingFunctions}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{FirstPastThePost}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{FlatApproval}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Bucklin}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{InstantRunoff}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{FairnessMeasure}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{RepScore}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{CondTest}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{IndepOfAlts}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{LaterNoHelpHarm}
+\end{figure}
+
+\end{centering}
+\normalsize
 
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
 %0000000000000000000000000000000000000000000000000000000000000000000000000000000000
