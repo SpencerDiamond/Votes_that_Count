@@ -97,9 +97,6 @@ public class Candidate extends Citizen{
 		setVotes(pVotes);
 		setPerf(0);
 	}
-	public Candidate(double pCiv, double pEcon, double pSoc, String s) {
-		super(pCiv, pEcon, pSoc);
-	}
 	
 	//mutator methods
 	public void setVotes(int pVotes) {

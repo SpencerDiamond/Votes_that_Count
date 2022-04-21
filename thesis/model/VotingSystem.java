@@ -415,7 +415,7 @@ public abstract class VotingSystem implements VotingFunctions {
 		double satisf;//satisfaction
 		
 		for (Voter v: nvList) {
-			ascore = 100.353 - v.dNorm(winner);
+			ascore = 173.21 - v.dNorm(winner);
 			satisf = (r.nextGaussian() * 10) + ascore + winner.getPerf();
 			//satisf = ascore + winner.getPerf();
 			v.setSatisf(satisf);

@@ -11,12 +11,22 @@ public class CondTest extends FairnessMeasure {
 
 	public boolean makeMeasure() {
 		ArrayList<Candidate> pwList = new ArrayList<>();
-		Candidate winner = getWinList().get(getWinList().size() - 1);
+		Candidate winner = getVotingSystem().findWin(getVoterList(), getCandList(), true);
 		boolean pass;
 		
-		pwList = getPWWinners(winner);
-		pass = checkPWWinner(winner, pwList);
-
+		if (getWinList().get(getWinList().size() - 1).dNorm(winner) !=0) {
+			throw new ArithmeticException("Winner doesn't match");
+		}
+		
+		if (getVotingSystem() instanceof InstantRunoff) {
+			for (Voter v: getVoterList()) {
+				v.setPrefList(v.findPrefList(getCandList(), getPartyList(), false));
+			}
+		}
+		
+		pwList = getPWWinners(winner, getCandList());
+		//System.out.println(pwList);
+		pass = checkPWWinner(winner, pwList, getCandList());
 		if (pass) {
 			System.out.println("Condorcet Test has been passed!");
 		} else {
@@ -25,46 +35,55 @@ public class CondTest extends FairnessMeasure {
 		return pass;
 	}
 	
-	public ArrayList<Candidate> getPWWinners(Candidate pCand){
-		ArrayList<Candidate> ncList = new ArrayList<>(getCandList());
+	public ArrayList<Candidate> getPWWinners(Candidate pCand, ArrayList<Candidate> cList){
+		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		ArrayList<Candidate> wList = new ArrayList<>();
-		Candidate pwWinner;
+		boolean lose;
 		
 		for (Candidate c: ncList) {
 			if (c.dNorm(pCand) > 0) {
-				pwWinner = pairwiseWinner(pCand, c);
-				wList.add(pwWinner);
-				//System.out.println("Pairwise winner of "+ winner +" and "+ c +" is "+ pwWinner);
+				lose = !pairwiseWinner(pCand, c);
+				if (lose) {
+					wList.add(c);
+					//System.out.println("Pairwise winner of "+ pCand +" and "+ c +" is "+ c);
+				} else {
+					//System.out.println("Pairwise winner of "+ pCand +" and "+ c +" is "+ pCand);
+				}
 			}
 		}
 		
 		return wList;
 	}
-	public boolean checkPWWinner(Candidate pWinner, ArrayList<Candidate> wList) {
+	public boolean checkPWWinner(Candidate pWinner, ArrayList<Candidate> wList, ArrayList<Candidate> cList){
+		ArrayList<Candidate> ncList = new ArrayList<>(cList);
 		ArrayList<Candidate> nwList = new ArrayList<>(wList);
 		ArrayList<Candidate> npwList = new ArrayList<>();
 		boolean nPass=false;
 		boolean pass=true;
+		ncList.remove(pWinner);
 		
-		for (Candidate w: nwList) {
-			if (!w.equals(pWinner)) {
-				//System.out.println(w);
-				npwList = getPWWinners(w);
-				nPass = (checkPWWinner(w, npwList));
-			}
-			if (nPass) {
-				//System.out.println("fail "+ w);
-				pass = false;
+		if (!nwList.isEmpty()) {
+			for (Candidate w: nwList) {
+				if (w.dNorm(pWinner) > 0) {
+//					System.out.println(w);
+					npwList = getPWWinners(w, ncList);
+					nPass = (checkPWWinner(w, npwList, ncList));
+				}
+				if (nPass) {
+//					System.out.println("fail "+ w);
+					pass = false;
+				}
 			}
 		}
 		
 		return pass;
 	}
-	public Candidate pairwiseWinner(Candidate pWinner, Candidate pCand) {
+	public boolean pairwiseWinner(Candidate pWinner, Candidate pCand) {
 		ArrayList<Voter> nvList = new ArrayList<>(getVoterList());
+		ArrayList<Candidate> ncList = new ArrayList<>();
 		Candidate nWinner = new Candidate(pWinner);
 		Candidate nCand = new Candidate(pCand);
-		ArrayList<Candidate> ncList = new ArrayList<>();
+		
 		
 		nWinner.reset();
 		nCand.reset();
@@ -78,19 +97,19 @@ public class CondTest extends FairnessMeasure {
 						nWinner.addVote();
 					} else {
 						nCand.addVote();
-					} 
-				} else if (v.getPrefList().contains(pWinner)) {
+					}
+				} else if (v.getPrefList().contains(pWinner) && !v.getPrefList().contains(pCand)) {
 					nWinner.addVote();					
-				} else if (v.getPrefList().contains(pCand)) {
+				} else if (!v.getPrefList().contains(pWinner) && v.getPrefList().contains(pCand)) {
 					nCand.addVote();					
 				}
 			}
 		}
-		
-		if (getVotingSystem().findWin(nvList, ncList, true).equals(nWinner)) {
-			return pWinner;
+		//System.out.println(nWinner +"   "+ nCand);
+		if (getVotingSystem().findWin(nvList, ncList, true).dNorm(nWinner) == 0) {
+			return true;
 		} else {
-			return pCand;
+			return false;
 		}
 	}
 }
