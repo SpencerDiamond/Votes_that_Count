@@ -158,9 +158,9 @@ public class Party extends PolEntity{
 	@Override
 	public String toString() {
 		if (getIndy()) {
-			return "Indy Party: " + super.toString() +","+ getFunding() +','+ getCandList().size();
+			return "Indy Party: " + super.toString() +" - "+ getFunding() +", "+ getCandList().size();
 		} else {
-			return "Party: " + super.toString() +","+ getFunding() +','+ getCandList().size();
+			return "Party: " + super.toString() +" - "+ getFunding() +", "+ getCandList().size();
 		}
 	}
 	

@@ -126,7 +126,9 @@ public class Candidate extends Citizen{
 	//print method
 	@Override
 	public String toString() {
-		return "Candidate: " + super.toString() +","+ getVotes() +" - "+ getPerf();
+    	String voteS = myDF.format(getVotes());
+    	String perfS = myDF.format(getPerf());
+		return "Candidate: " + super.toString() +" - "+ voteS +", "+ perfS;
 	}
 	
 	@Override

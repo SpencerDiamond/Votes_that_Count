@@ -91,7 +91,9 @@ public class Voter extends Citizen{
 	//print method
 	@Override
 	public String toString() {
-		return "Voter: " + super.toString() +","+ getAppRad() +","+ getSatisf();
+    	String arS = myDF.format(getAppRad());
+    	String satS = myDF.format(getSatisf());
+		return "Voter: " + super.toString() +" - "+ arS +", "+ satS;
 	}
 	
 	public void reset() {
