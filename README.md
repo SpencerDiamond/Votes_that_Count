@@ -1,6 +1,7 @@
 # Votes_that_Count
 
-  This is Spencer Diamond's Barrett, the Honors College thesis/creative project. 
+  This is Spencer Diamond's Barrett, the Honors College thesis/creative project.
+This thesis was defended via Zoom on 4/7/2022, the recording of which can be viewed at https://youtu.be/lcSJJmz1EV0
 
    The goal of this project was to develop a prototype for an educational tool that will help users understand how the voting system deployed by a government can affect the outcomes of elections. This tool was developed in Java SE, consisting of a model for the simulation of elections capable of supporting various voting systems, along with a variety of fairness measures, and educational and explanatory material. While a completed version of this tool would ideally be fully self-contained, easily accessible in-browser, and provide detailed visualizations of the simulated elections, the current prototype version consists of a GitHub repository containing the code, with the educational material and explanations contained within the thesis paper. Ultimately, the goal of this project was to be a stepping stone on the path to create a tool that will instill a measure of systemic skepticism in the user; to give them cause to question why our systems are built the way they are, and reasons to believe that they could be changed for the better. In undertaking this project, I hope to help in providing people with the political education needed to make informed decisions about how they want the government to function.
    
